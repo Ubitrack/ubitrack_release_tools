@@ -69,6 +69,8 @@ def parse_depencencies(pkg):
 if __name__ == '__main__':
     config_filename = "ubitrack-1.3.0.yml"
     pkg = "ubitrack/1.3.0@ubitrack/stable"
+    remote = "camp"
+
     config = yaml.load(open(config_filename).read())
     branches = {v['name']: v['branch'] for v in config}
 
@@ -90,3 +92,10 @@ if __name__ == '__main__':
 
         print("Export %s" % str(ref))
         ConanOutputRunner()("conan export %s %s/%s" % (pkg_folder, ref.user, ref.channel))
+
+    print("Build all dependencies")
+    ConanOutputRunner()('conan create %s %s/%s --build "*"' % (os.path.join(build_folder, pkg.name), pkg.user, pkg.channel))
+
+    for ref, url in deps:
+        print("Upload %s" % str(ref))
+        ConanOutputRunner()('conan upload %s -c --all -r %s' % (str(ref), remote))
