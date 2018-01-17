@@ -4,6 +4,7 @@ import re
 import sys
 from collections import defaultdict
 import shutil
+import yaml
 
 from conans.client.conan_api import Conan
 from conans.client.runner import ConanRunner
@@ -66,9 +67,12 @@ def parse_depencencies(pkg):
 
 
 if __name__ == '__main__':
+    config_filename = "ubitrack-1.3.0.yml"
     pkg = "ubitrack/1.3.0@ubitrack/stable"
-    deps = parse_depencencies(pkg)
+    config = yaml.load(open(config_filename).read())
+    branches = {v['name']: v['branch'] for v in config}
 
+    deps = parse_depencencies(pkg)
 
     build_folder = "build"
     if os.path.isdir(build_folder):
@@ -79,9 +83,10 @@ if __name__ == '__main__':
         if not ref.user in ['camposs', 'ubitrack']:
             continue
 
-        print("Clone %s" % url)
+        branch = branches.get(ref.name, "master")
+        print("Clone %s / %s" % (url, branch))
         pkg_folder = os.path.join(build_folder, ref.name)
-        ConanOutputRunner()("git clone %s %s" % (url, pkg_folder))
+        ConanOutputRunner()("git clone --branch %s %s %s" % (branch, url, pkg_folder))
 
         print("Export %s" % str(ref))
         ConanOutputRunner()("conan export %s %s/%s" % (pkg_folder, ref.user, ref.channel))
