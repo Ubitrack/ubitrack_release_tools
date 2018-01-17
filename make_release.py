@@ -38,7 +38,7 @@ class ConanOutputRunner(ConanRunner):
 
 def parse_depencencies(pkg):
     runner = ConanOutputRunner()
-    runner("conan info %s -n url" % pkg)
+    runner("conan info %s -n url" % str(pkg))
     lines = [l.strip() for l in runner.output.split("\n")]
 
     ret = []
@@ -68,7 +68,7 @@ def parse_depencencies(pkg):
 
 if __name__ == '__main__':
     config_filename = "ubitrack-1.3.0.yml"
-    pkg = "ubitrack/1.3.0@ubitrack/stable"
+    pkg = ConanFileReference.loads("ubitrack/1.3.0@ubitrack/stable")
     remote = "camp"
 
     config = yaml.load(open(config_filename).read())
