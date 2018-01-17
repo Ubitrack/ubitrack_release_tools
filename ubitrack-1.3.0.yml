@@ -20,33 +20,33 @@
   branch: stable/4.2.3
 - name: ubitrack
   branch: master
+- name: ubitrack_virtualenv_generator
+  branch: master
 - name: ubitrack_boost_bindings
   branch: master
 - name: ubitrack_log4cpp
   branch: stable/0.3.5
 - name: ubitrack_tinyxml
   branch: stable/2.5.3
+- name: ubitrack_core
+  branch: refactor_buildsystem_conan
+- name: ubitrack_dataflow
+  branch: refactor_buildsystem_conan
 - name: ubitrack_component_core
   branch: refactor_buildsystem_conan
 - name: ubitrack_component_vision
   branch: refactor_buildsystem_conan
 - name: ubitrack_component_visualization
   branch: refactor_buildsystem_conan
-- name: ubitrack_core
+- name: ubitrack_facade
   branch: refactor_buildsystem_conan
-- name: ubitrack_dataflow
+- name: ubitrack_vision
+  branch: refactor_buildsystem_conan
+- name: ubitrack_visualization
   branch: refactor_buildsystem_conan
 - name: ubitrack_device_camera_avfoundation
   branch: refactor_buildsystem_conan
 - name: ubitrack_device_comm_zmq
   branch: refactor_buildsystem_conan
 - name: ubitrack_device_tracker_art
-  branch: refactor_buildsystem_conan
-- name: ubitrack_facade
-  branch: refactor_buildsystem_conan
-- name: ubitrack_virtualenv_generator
-  branch: refactor_buildsystem_conan
-- name: ubitrack_vision
-  branch: refactor_buildsystem_conan
-- name: ubitrack_visualization
   branch: refactor_buildsystem_conan
