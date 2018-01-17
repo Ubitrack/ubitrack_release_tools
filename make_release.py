@@ -88,14 +88,14 @@ if __name__ == '__main__':
         branch = branches.get(ref.name, "master")
         print("Clone %s / %s" % (url, branch))
         pkg_folder = os.path.join(build_folder, ref.name)
-        ConanOutputRunner()("git clone --branch %s %s %s" % (branch, url, pkg_folder))
+        ConanRunner()("git clone --branch %s %s %s" % (branch, url, pkg_folder))
 
         print("Export %s" % str(ref))
-        ConanOutputRunner()("conan export %s %s/%s" % (pkg_folder, ref.user, ref.channel))
+        ConanRunner()("conan export %s %s/%s" % (pkg_folder, ref.user, ref.channel))
 
     print("Build all dependencies")
-    ConanOutputRunner()('conan create %s %s/%s --build "*"' % (os.path.join(build_folder, pkg.name), pkg.user, pkg.channel))
+    ConanRunner()('conan create %s %s/%s --build "*"' % (os.path.join(build_folder, pkg.name), pkg.user, pkg.channel))
 
     for ref, url in deps:
         print("Upload %s" % str(ref))
-        ConanOutputRunner()('conan upload %s -c --all -r %s' % (str(ref), remote))
+        ConanRunner()('conan upload %s -c --all -r %s' % (str(ref), remote))
