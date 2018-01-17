@@ -80,10 +80,9 @@ if __name__ == '__main__':
         shutil.rmtree(build_folder)
     os.mkdir(build_folder)
 
-    # first download the meta package
-    ConanRunner()("git clone --branch master %s %s" % (pkg_repo_url, os.path.join(build_folder, pkg.name)))
-
-    ConanRunner()("conan export %s %s/%s" % (os.path.join(build_folder, pkg.name), pkg.user, pkg.channel))
+    # first download and export the meta package
+    ConanRunner()("git clone --branch master %s %s" % (pkg_repo_url, os.path.join(build_folder, pkg.name)), output=None)
+    ConanRunner()("conan export %s %s/%s" % (os.path.join(build_folder, pkg.name), pkg.user, pkg.channel), output=None)
 
     # parse all dependencies
     deps = parse_depencencies(pkg)
