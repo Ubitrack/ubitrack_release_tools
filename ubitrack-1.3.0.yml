@@ -23,9 +23,9 @@
 - name: ubitrack_boost_bindings
   branch: master
 - name: ubitrack_log4cpp
-  branch: master
+  branch: stable/0.3.5
 - name: ubitrack_tinyxml
-  branch: master
+  branch: stable/2.5.3
 - name: ubitrack_component_core
   branch: refactor_buildsystem_conan
 - name: ubitrack_component_vision
