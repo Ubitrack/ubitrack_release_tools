@@ -69,17 +69,24 @@ def parse_depencencies(pkg):
 if __name__ == '__main__':
     config_filename = "ubitrack-1.3.0.yml"
     pkg = ConanFileReference.loads("ubitrack/1.3.0@ubitrack/stable")
+    pkg_repo_url = "https://github.com/ubitrack/ubitrack"
     remote = "camp"
 
     config = yaml.load(open(config_filename).read())
     branches = {v['name']: v['branch'] for v in config}
 
-    deps = parse_depencencies(pkg)
-
     build_folder = "build"
     if os.path.isdir(build_folder):
         shutil.rmtree(build_folder)
     os.mkdir(build_folder)
+
+    # first download the meta package
+    ConanRunner()("git clone --branch master %s %s" % (pkg_repo_url, os.path.join(build_folder, pkg.name)))
+
+    ConanRunner()("conan export %s %s/%s" % (os.path.join(build_folder, pkg.name), pkg.user, pkg.channel))
+
+    # parse all dependencies
+    deps = parse_depencencies(pkg)
  
     for ref, url in deps:
         if not ref.user in ['camposs', 'ubitrack']:
