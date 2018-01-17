@@ -13,7 +13,7 @@ from conans import __version__ as client_version
 
 class ConanOutputRunner(ConanRunner):
 
-    def __init__(self):
+    def __init__(self, verbose=True):
         super(ConanOutputRunner, self).__init__()
 
         class OutputInternal(object):
@@ -22,7 +22,8 @@ class ConanOutputRunner(ConanRunner):
 
             def write(self, data):
                 self.output += str(data)
-                # sys.stdout.write(data)
+                if verbose:
+                    sys.stdout.write(data)
 
         self._output = OutputInternal()
 
