@@ -5,103 +5,111 @@ import sys
 from collections import defaultdict
 import shutil
 import yaml
+import argparse
+import platform
 
-from conans.client.conan_api import Conan
-from conans.client.runner import ConanRunner
-from conans.model.ref import ConanFileReference
-from conans.model.version import Version
+
 from conans import __version__ as client_version
-
-class ConanOutputRunner(ConanRunner):
-
-    def __init__(self, verbose=True):
-        super(ConanOutputRunner, self).__init__()
-
-        class OutputInternal(object):
-            def __init__(self):
-                self.output = ""
-
-            def write(self, data):
-                self.output += str(data)
-                if verbose:
-                    sys.stdout.write(data)
-
-        self._output = OutputInternal()
-
-    @property
-    def output(self):
-        return self._output.output
-
-    def __call__(self, command):
-        return super(ConanOutputRunner, self).__call__(command, output=self._output)
+from conans.client.conan_api import (Conan, default_manifest_folder)
+from conans.errors import ConanException
+from conans.model.ref import ConanFileReference
+from conans.client.runner import ConanRunner
 
 
-def parse_depencencies(pkg):
-    runner = ConanOutputRunner()
-    runner("conan info %s -n url" % str(pkg))
-    lines = [l.strip() for l in runner.output.split("\n")]
+def main():
+    parser = argparse.ArgumentParser(description='Create scripts to assist with making a conan release for ubitrack.')
 
-    ret = []
-    reference = None
-    url = None
+    parser.add_argument('--config', dest='config', action='store',
+                        default="ubitrack-1.3.0.yml",
+                        help='yaml config file with the specifcation for the release')
 
-    for l in lines:
-        if "overriden" in l or "Version" in l:
-            continue
+    parser.add_argument('--gitrepo', dest='url', action='store',
+                        default="https://github.com/ubitrack/ubitrack",
+                        help='url to the git repository for the release-metapackage')
 
-        try:
-            reference = ConanFileReference.loads(l)
-            continue
-        except:
-            url = None
+    parser.add_argument('--gitbranch', dest='branch', action='store',
+                        default="master",
+                        help='url to the git repository for the release-metapackage')
 
-        if l.startswith("URL:"):
-            url = [v.strip() for v in l.split(": ")][-1]
+    parser.add_argument('--conanrepo', dest='repo', action='store',
+                        default="camp",
+                        help='name of the conan repository to use')
 
-        if reference is not None and url is not None:
-            ret.append((reference, url))
-            reference = None
-            url = None
+    parser.add_argument('--conanuser', dest='user', action='store',
+                        default="ubitrack",
+                        help='conan user to use for publishing')
 
-    return ret
+    parser.add_argument('--conanchannel', dest='channel', action='store',
+                        default="stable",
+                        help='conan channel to use for publishing')
+
+    args = parser.parse_args()
 
 
-if __name__ == '__main__':
-    config_filename = "ubitrack-1.3.0.yml"
-    pkg = ConanFileReference.loads("ubitrack/1.3.0@ubitrack/stable")
-    pkg_repo_url = "https://github.com/ubitrack/ubitrack"
-    remote = "camp"
-
-    config = yaml.load(open(config_filename).read())
+    config = yaml.load(open(args.config).read())
     branches = {v['name']: v['branch'] for v in config}
 
     build_folder = "build"
+    meta_repo_folder = os.path.join(build_folder, "meta")
+
+    # clean previous build folder and create a fresh one
     if os.path.isdir(build_folder):
         shutil.rmtree(build_folder)
     os.mkdir(build_folder)
 
     # first download and export the meta package
-    ConanRunner()("git clone --branch master %s %s" % (pkg_repo_url, os.path.join(build_folder, pkg.name)), output=None)
-    ConanRunner()("conan export %s %s/%s" % (os.path.join(build_folder, pkg.name), pkg.user, pkg.channel), output=None)
+    ConanRunner()("git clone --branch master %s %s" % (args.url, meta_repo_folder), output=None)
+    ConanRunner()("conan export %s %s/%s" % (meta_repo_folder, args.user, args.channel), output=None)
 
-    # parse all dependencies
-    deps = parse_depencencies(pkg)
- 
-    for ref, url in deps:
-        if not ref.user in ['camposs', 'ubitrack']:
-            continue
+    try:
+        conan_api, client_cache, user_io = Conan.factory()
 
+    except ConanException:  # Error migrating
+        sys.exit(-1)
+
+    deps_graph, graph_updates_info, project_reference = conan_api.info_get_graph(meta_repo_folder,
+                                                                                 # remote=args.remote,
+                                                                                 # settings=args.settings,
+                                                                                 # options=args.options,
+                                                                                 # env=args.env,
+                                                                                 # profile_name=args.profile,
+                                                                                 # update=args.update,
+                                                                                 # install_folder=args.install_folder
+                                                                                 )
+
+    graph_updates_info = graph_updates_info or {}
+    all_references = []
+    for node in sorted(deps_graph.nodes):
+        ref, conan = node
+        if not ref:
+            # ref is only None iff info is being printed for a project directory, and
+            # not a passed in reference
+            if project_reference is None:
+                continue
+            else:
+                ref = ConanFileReference.loads("%s@%s/%s" % (project_reference.split("@")[0], args.user, args.channel))
+
+        all_references.append(ref)
         branch = branches.get(ref.name, "master")
-        print("Clone %s / %s" % (url, branch))
+        print("Clone %s / %s" % (conan.url, branch))
         pkg_folder = os.path.join(build_folder, ref.name)
-        ConanRunner()("git clone --branch %s %s %s" % (branch, url, pkg_folder), output=None)
+        ConanRunner()("git clone --branch %s %s %s" % (branch, conan.url, pkg_folder), output=None)
 
         print("Export %s" % str(ref))
         ConanRunner()("conan export %s %s/%s" % (pkg_folder, ref.user, ref.channel), output=None)
 
-    print("Build all dependencies")
-    ConanRunner()('conan create %s %s/%s --build "*"' % (os.path.join(build_folder, pkg.name), pkg.user, pkg.channel), output=None)
-
-    for ref, url in deps:
+    # create build_script
+    buildscript_lines = ["@echo off"] if platform.system() == "Windows" else []
+    buildscript_lines.append('conan create %s %s/%s --build "*"' % (meta_repo_folder, args.user, args.channel))
+    for ref in all_references:
         print("Upload %s" % str(ref))
-        ConanRunner()('conan upload %s -c --all -r %s' % (str(ref), remote), output=None)
+        buildscript_lines.append('conan upload %s -c --all -r %s' % (str(ref), args.repo))
+
+
+    ext = "bat" if platform.system() == "Windows" else "sh"
+    buildscript_fname = "build_release.%s" % ext
+    open(buildscript_fname, 'w').write(os.linesep.join(buildscript_lines))
+    print("created buildscript: %s" % buildscript_fname)
+
+if __name__ == '__main__':
+    main()
