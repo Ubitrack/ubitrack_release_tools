@@ -46,6 +46,12 @@
   branch: refactor_buildsystem_conan
 - name: ubitrack_device_camera_avfoundation
   branch: refactor_buildsystem_conan
+- name: ubitrack_device_camera_directshow
+  branch: refactor_buildsystem_conan
+- name: ubitrack_device_camera_msmf
+  branch: refactor_buildsystem_conan
+- name: ubitrack_device_camera_flycapture
+  branch: refactor_buildsystem_conan
 - name: ubitrack_device_comm_zmq
   branch: refactor_buildsystem_conan
 - name: ubitrack_device_tracker_art
