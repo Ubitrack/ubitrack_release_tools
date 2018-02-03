@@ -89,6 +89,7 @@ def main():
             else:
                 ref = ConanFileReference.loads("%s@%s/%s" % (project_reference.split("@")[0], args.user, args.channel))
 
+        print (ref.name)
         all_references.append(ref)
         branch = branches.get(ref.name, "master")
         print("Clone %s / %s" % (conan.url, branch))

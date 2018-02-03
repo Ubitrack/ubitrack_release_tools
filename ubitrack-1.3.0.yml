@@ -56,3 +56,5 @@
   branch: refactor_buildsystem_conan
 - name: ubitrack_device_tracker_art
   branch: refactor_buildsystem_conan
+- name: ubitrack_lang_boost_python
+  branch: refactor_buildsystem_conan
