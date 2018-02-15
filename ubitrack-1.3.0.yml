@@ -1,5 +1,5 @@
 - name: Boost
-  branch: stable/1.64.0
+  branch: stable/1.62.0
 - name: assimp
   branch: stable/4.1.0
 - name: clapack
@@ -51,6 +51,8 @@
 - name: ubitrack_device_camera_msmf
   branch: refactor_buildsystem_conan
 - name: ubitrack_device_camera_flycapture
+  branch: refactor_buildsystem_conan
+- name: ubitrack_device_camera_kinect2
   branch: refactor_buildsystem_conan
 - name: ubitrack_device_comm_zmq
   branch: refactor_buildsystem_conan
