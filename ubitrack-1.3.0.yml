@@ -8,6 +8,8 @@
   branch: stable/4.2.2
 - name: glew
   branch: stable/2.1.0
+- name: glad
+  branch: stable/0.1.20
 - name: glfw
   branch: stable/3.2.1
 - name: msgpack

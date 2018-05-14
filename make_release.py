@@ -80,7 +80,8 @@ def main():
     graph_updates_info = graph_updates_info or {}
     all_references = []
     for node in sorted(deps_graph.nodes):
-        ref, conan = node
+        ref = node.conan_ref
+        conan = node.conanfile
         if not ref:
             # ref is only None iff info is being printed for a project directory, and
             # not a passed in reference
