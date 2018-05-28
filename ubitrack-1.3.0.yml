@@ -1,64 +1,96 @@
 - name: Boost
   branch: stable/1.62.0
+  conan-repo: camposs
 - name: assimp
   branch: stable/4.1.0
+  conan-repo: camposs
 - name: clapack
   branch: stable/3.2.1
+  conan-repo: camposs
 - name: cppzmq
   branch: stable/4.2.2
+  conan-repo: camposs
 - name: glew
   branch: stable/2.1.0
+  conan-repo: camposs
 - name: glad
   branch: stable/0.1.20
+  conan-repo: camposs
 - name: glfw
   branch: stable/3.2.1
+  conan-repo: camposs
 - name: msgpack
   branch: stable/2.1.5
+  conan-repo: camposs
 - name: opencv
   branch: stable/3.2.0
+  conan-repo: camposs
 - name: zlib
   branch: stable/1.2.11
+  conan-repo: camposs
 - name: zmq
   branch: stable/4.2.3
+  conan-repo: camposs
 - name: ubitrack
   branch: master
+  conan-repo: ubitrack
 - name: ubitrack_virtualenv_generator
   branch: master
+  conan-repo: ubitrack
 - name: ubitrack_boost_bindings
   branch: master
+  conan-repo: ubitrack
 - name: ubitrack_log4cpp
   branch: stable/0.3.5
+  conan-repo: ubitrack
 - name: ubitrack_tinyxml
   branch: stable/2.5.3
+  conan-repo: ubitrack
 - name: ubitrack_core
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_dataflow
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_component_core
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_component_vision
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_component_visualization
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_facade
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_vision
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_visualization
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_device_camera_avfoundation
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_device_camera_directshow
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_device_camera_msmf
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_device_camera_flycapture
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_device_camera_kinect2
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_device_comm_zmq
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_device_tracker_art
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack
 - name: ubitrack_lang_boost_python
   branch: refactor_buildsystem_conan
+  conan-repo: ubitrack

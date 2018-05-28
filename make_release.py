@@ -48,6 +48,7 @@ def main():
 
     config = yaml.load(open(args.config).read())
     branches = {v['name']: v['branch'] for v in config}
+    conan_repo = {v['name']: v['conan-repo'] for v in config}
 
     build_folder = "build"
     meta_repo_folder = os.path.join(build_folder, "meta")
@@ -103,15 +104,25 @@ def main():
     # create build_script
     buildscript_lines = ["@echo off"] if platform.system() == "Windows" else []
     buildscript_lines.append('conan create %s %s/%s --build "*"' % (meta_repo_folder, args.user, args.channel))
-    for ref in all_references:
-        print("Upload %s" % str(ref))
-        buildscript_lines.append('conan upload %s -c --all -r %s' % (str(ref), args.repo))
-
 
     ext = "bat" if platform.system() == "Windows" else "sh"
     buildscript_fname = "build_release.%s" % ext
     open(buildscript_fname, 'w').write(os.linesep.join(buildscript_lines))
     print("created buildscript: %s" % buildscript_fname)
+
+
+    # create build_script
+    buildscript_lines = ["@echo off"] if platform.system() == "Windows" else []
+    for ref in all_references:
+        print("Upload %s" % str(ref))
+        buildscript_lines.append('conan upload %s -c --all -r %s' % (str(ref), conan_repo[ref.name]))
+
+
+    ext = "bat" if platform.system() == "Windows" else "sh"
+    buildscript_fname = "deploy_release.%s" % ext
+    open(buildscript_fname, 'w').write(os.linesep.join(buildscript_lines))
+    print("created deployscript: %s" % buildscript_fname)
+
 
 if __name__ == '__main__':
     main()
