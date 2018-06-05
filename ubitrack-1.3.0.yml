@@ -14,7 +14,7 @@
   branch: stable/2.1.0
   conan-repo: camposs
 - name: glad
-  branch: stable/0.1.20
+  branch: stable/0.1.23
   conan-repo: camposs
 - name: glfw
   branch: stable/3.2.1
