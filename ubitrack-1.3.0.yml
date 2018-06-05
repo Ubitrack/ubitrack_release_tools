@@ -1,5 +1,5 @@
 - name: Boost
-  branch: stable/1.62.0
+  branch: stable/1.64.0
   conan-repo: camposs
 - name: assimp
   branch: stable/4.1.0
