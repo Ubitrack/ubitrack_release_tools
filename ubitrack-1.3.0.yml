@@ -23,7 +23,7 @@
   branch: stable/2.1.5
   conan-repo: camposs
 - name: opencv
-  branch: stable/3.2.0
+  branch: stable/3.4.1
   conan-repo: camposs
 - name: zlib
   branch: stable/1.2.11
