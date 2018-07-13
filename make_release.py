@@ -68,17 +68,8 @@ def main():
     except ConanException:  # Error migrating
         sys.exit(-1)
 
-    deps_graph, graph_updates_info, project_reference = conan_api.info_get_graph(meta_repo_folder,
-                                                                                 # remote=args.remote,
-                                                                                 # settings=args.settings,
-                                                                                 # options=args.options,
-                                                                                 # env=args.env,
-                                                                                 # profile_name=args.profile,
-                                                                                 # update=args.update,
-                                                                                 # install_folder=args.install_folder
-                                                                                 )
+    deps_graph, project_reference = conan_api.info(meta_repo_folder)
 
-    graph_updates_info = graph_updates_info or {}
     all_references = []
     for node in sorted(deps_graph.nodes):
         ref = node.conan_ref

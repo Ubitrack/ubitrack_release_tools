@@ -58,6 +58,9 @@
 - name: ubitrack_component_vision
   branch: refactor_buildsystem_conan
   conan-repo: ubitrack
+- name: ubitrack_component_vision_aruco
+  branch: master
+  conan-repo: ubitrack
 - name: ubitrack_component_visualization
   branch: refactor_buildsystem_conan
   conan-repo: ubitrack
