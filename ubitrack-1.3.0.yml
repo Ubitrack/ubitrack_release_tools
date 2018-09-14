@@ -14,7 +14,7 @@
   branch: stable/2.1.0
   conan-repo: camposs
 - name: glad
-  branch: stable/0.1.23
+  branch: stable/0.1.27
   conan-repo: camposs
 - name: glfw
   branch: stable/3.2.1
@@ -23,13 +23,13 @@
   branch: stable/2.1.5
   conan-repo: camposs
 - name: opencv
-  branch: stable/3.4.1
+  branch: stable/3.4.3
   conan-repo: camposs
 - name: zlib
   branch: stable/1.2.11
   conan-repo: camposs
 - name: zmq
-  branch: stable/4.2.3
+  branch: stable/4.2.5
   conan-repo: camposs
 - name: ubitrack
   branch: master
