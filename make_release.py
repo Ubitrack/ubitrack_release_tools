@@ -80,7 +80,8 @@ def main():
             if project_reference is None:
                 continue
             else:
-                ref = ConanFileReference.loads("%s@%s/%s" % (project_reference.split("@")[0], args.user, args.channel))
+                ref = ConanFileReference.loads("%s/%s@%s/%s" % (project_reference.name,
+                    project_reference.version, args.user, args.channel))
 
         print (ref.name)
         all_references.append(ref)
