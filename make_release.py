@@ -7,6 +7,7 @@ import shutil
 import yaml
 import argparse
 import platform
+import semver
 
 
 from conans import __version__ as client_version
@@ -14,6 +15,9 @@ from conans.client.conan_api import (Conan, default_manifest_folder)
 from conans.errors import ConanException
 from conans.model.ref import ConanFileReference
 from conans.client.runner import ConanRunner
+
+# compatibility of non-public api calls..
+CONAN_PROJECTREFERENCE_IS_OBJECT = semver.gte(client_version, '1.7.0', True)
 
 
 def main():
@@ -80,8 +84,11 @@ def main():
             if project_reference is None:
                 continue
             else:
-                ref = ConanFileReference.loads("%s/%s@%s/%s" % (project_reference.name,
-                    project_reference.version, args.user, args.channel))
+                if CONAN_PROJECTREFERENCE_IS_OBJECT:
+                    ref = ConanFileReference.loads("%s/%s@%s/%s" % (project_reference.name,
+                        project_reference.version, args.user, args.channel))
+                else:
+                    ref = ConanFileReference.loads("%s@%s/%s" % (project_reference.split('@')[0], args.user, args.channel))
 
         print (ref.name)
         all_references.append(ref)
