@@ -245,7 +245,7 @@ def build_release(deps, build_folder, config):
     packages = []
     for info in result['installed']:
         packages.append({"reference": info['recipe']['id'],
-                         "timestamp": info['recipe']['time'].total_seconds(),
+                         "timestamp": info['recipe']['time'].isoformat(),
                          "package_ids": [p['id'] for p in info['packages']],
                          })
     return {'packages': packages}
