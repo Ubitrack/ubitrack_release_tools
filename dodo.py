@@ -253,7 +253,7 @@ def build_release(deps, build_folder, config):
 
 def deploy_release(packages, config):
     conan_api, client_cache, user_io = Conan.factory()
-    conan_repo = config['conan_repo']
+    conan_repo = {v['name']: v['conan-repo'] for v in config['dependencies']}
 
     for package in packages:
         reference = ConanFileReference.loads(package['reference'])
