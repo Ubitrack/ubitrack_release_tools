@@ -261,10 +261,15 @@ def deploy_release(packages, config):
             print("skip uploading due to missing remote: %s" % reference)
             continue
         remote = conan_repo[reference.name]
+        all_success = True
         for pid in package['package_ids']:
-            result = conan_api.upload(package['reference'], package=pid, confirm=True, remote_name=remote)
-
-    return True
+            try:
+                result = conan_api.upload(package['reference'], package=pid, confirm=True, remote_name=remote,
+                                          policy="force-upload")
+            except Exception as e:
+                print(e)
+                all_success = False
+    return all_success
 
 
 @create_after(executed='parse_dependencies', target_regex='package_worker_.*')
