@@ -258,7 +258,7 @@ def deploy_release(packages, config):
     for package in packages:
         reference = ConanFileReference.loads(package['reference'])
         if reference.name not in conan_repo:
-            print("skip uploading due to missing remote: %s" % reference)
+            print("skip uploading due to missing remote: %s" % str(reference))
             continue
         remote = conan_repo[reference.name]
         all_success = True
