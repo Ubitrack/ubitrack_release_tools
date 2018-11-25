@@ -27,6 +27,9 @@ dependencies:
  - name: glfw
    branch: stable/3.2.1
    conan-repo: camposs
+ - name: glext
+   branch: master
+   conan-repo: camposs
  - name: msgpack
    branch: stable/2.1.5
    conan-repo: camposs
