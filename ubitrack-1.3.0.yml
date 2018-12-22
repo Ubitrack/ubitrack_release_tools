@@ -90,6 +90,9 @@ dependencies:
  - name: ubitrack_device_camera_msmf
    branch: refactor_buildsystem_conan
    conan-repo: ubitrack
+ - name: ubitrack_device_camera_v4l
+   branch: refactor_buildsystem_conan
+   conan-repo: ubitrack
  - name: ubitrack_device_camera_flycapture
    branch: refactor_buildsystem_conan
    conan-repo: ubitrack
