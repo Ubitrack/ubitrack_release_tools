@@ -20,7 +20,7 @@ from conans.client.runner import ConanRunner
 
 CONAN_PROJECTREFERENCE_IS_OBJECT = semver.gte(client_version, '1.7.0', True)
 BUILD_CONFIG_NAME = os.path.join(os.curdir, "build_config.yml")
-
+SKIP_PACKAGES = ["cmake_installer", ]
 
 class Git(ConanGit):
 
@@ -281,6 +281,8 @@ def task_package_worker_gen():
     deps = []
     for ref_str, gitrepo in build_config['dependencies']:
         ref = ConanFileReference.loads(ref_str)
+        if ref.name in SKIP_PACKAGES:
+            contine
         prepare_task_name = "package_worker_prepare_%s" % ref.name
         yield {
             'name': prepare_task_name,
