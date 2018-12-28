@@ -282,7 +282,7 @@ def task_package_worker_gen():
     for ref_str, gitrepo in build_config['dependencies']:
         ref = ConanFileReference.loads(ref_str)
         if ref.name in SKIP_PACKAGES:
-            contine
+            continue
         prepare_task_name = "package_worker_prepare_%s" % ref.name
         yield {
             'name': prepare_task_name,
