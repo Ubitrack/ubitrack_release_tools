@@ -35,14 +35,28 @@ class Git(ConanGit):
                                  "attribute in the 'scm'" % self.folder)
 
 
+################################
+#
+#
+#
+################################
 def load_config(config, build_folder):
     print("Loading configuration from: %s" % config)
     data = yaml.load(open(config).read())
     # use os.curdir if not an absolute path ?
     meta_repo_folder = os.path.join(build_folder, "meta")
+
+    build_config = {
+        "meta_repo_folder": meta_repo_folder,
+        "dependencies": data['dependencies'],
+        "name": data["meta_package"]["name"],
+        "version": data["meta_package"]["version"],
+        "user": data["meta_package"]["user"],
+        "channel": data["meta_package"]["channel"],
+        }
+    yaml.dump(build_config, open(BUILD_CONFIG_NAME, "w"))
+
     return {"config": data,
-            "branches": {v['name']: v['branch'] for v in data['dependencies']},
-            "conan_repo": {v['name']: v['conan-repo'] for v in data['dependencies']},
             "meta_repo_folder": meta_repo_folder,
             }
 
@@ -60,6 +74,11 @@ def task_load_config():
             }
 
 
+################################
+#
+#
+#
+################################
 def prepare_meta_repository(meta_repo_folder, config, wipe):
     if wipe and os.path.exists(meta_repo_folder):
         print("Removing meta-repo folder: %s" % meta_repo_folder)
@@ -83,7 +102,6 @@ def prepare_meta_repository(meta_repo_folder, config, wipe):
         "meta_repo_folder": meta_repo_folder,
     }
 
-
 def task_prepare_meta_repository():
     return {'actions': [(prepare_meta_repository,)],
             'params': [{'name': 'wipe',
@@ -99,6 +117,11 @@ def task_prepare_meta_repository():
            }
 
 
+################################
+#
+#
+#
+################################
 def export_meta_package(meta_repo_folder, meta_commit_rev, config):
     name = config['meta_package']['name']
     version = config['meta_package']['version']
@@ -128,59 +151,66 @@ def task_export_meta_package():
            }
 
 
-def parse_dependencies( meta_repo_folder, user, channel):
-    conan_api, client_cache, user_io = Conan.factory()
-    deps_graph, project_reference = conan_api.info(meta_repo_folder)
+################################
+#
+#
+#
+################################
+# def parse_dependencies( meta_repo_folder, user, channel):
+#     conan_api, client_cache, user_io = Conan.factory()
+#     deps_graph, project_reference = conan_api.info(meta_repo_folder)
 
-    all_references = []
-    for node in sorted(deps_graph.nodes):
-        conan = node.conanfile
-        ref = node.conan_ref
-        if not ref:
-            # ref is only None iff info is being printed for a project directory, and
-            # not a passed in reference
-            if project_reference is None:
-                continue
-            else:
-                if CONAN_PROJECTREFERENCE_IS_OBJECT:
-                    ref = ConanFileReference.loads("%s/%s@%s/%s" % (project_reference.name,
-                                                   project_reference.version, user, channel))
-                else:
-                    ref = ConanFileReference.loads("%s@%s/%s" % (project_reference.split('@')[0], user, channel))
-        all_references.append((str(ref), conan.url))
+#     all_references = []
+#     for node in sorted(deps_graph.nodes):
+#         conan = node.conanfile
+#         ref = node.conan_ref
+#         if not ref:
+#             # ref is only None iff info is being printed for a project directory, and
+#             # not a passed in reference
+#             if project_reference is None:
+#                 continue
+#             else:
+#                 if CONAN_PROJECTREFERENCE_IS_OBJECT:
+#                     ref = ConanFileReference.loads("%s/%s@%s/%s" % (project_reference.name,
+#                                                    project_reference.version, user, channel))
+#                 else:
+#                     ref = ConanFileReference.loads("%s@%s/%s" % (project_reference.split('@')[0], user, channel))
+#         all_references.append((str(ref), conan.url))
 
-    build_config = {
-        "meta_repo_folder": meta_repo_folder,
-        "dependencies": all_references,
-        "name": project_reference.name,
-        "version": project_reference.version,
-        "user": user,
-        "channel": channel,
-        }
-    yaml.dump(build_config, open(BUILD_CONFIG_NAME, "w"))
-    return True
-
-
-def task_parse_dependencies():
-    return {'actions': [(parse_dependencies,)],
-            'getargs': {'meta_repo_folder': ('export_meta_package', "meta_repo_folder"),
-                        'user': ('export_meta_package', "user"),
-                        'channel': ('export_meta_package', "channel"),
-                        },
-            'uptodate': [result_dep('export_meta_package')],
-            'targets': [BUILD_CONFIG_NAME,],
-            'verbosity': 2,
-           }
+#     build_config = {
+#         "meta_repo_folder": meta_repo_folder,
+#         "dependencies": all_references,
+#         "name": project_reference.name,
+#         "version": project_reference.version,
+#         "user": user,
+#         "channel": channel,
+#         }
+#     yaml.dump(build_config, open(BUILD_CONFIG_NAME, "w"))
+#     return True
 
 
-def prepare_package_repository(reference, gitrepo, build_folder, config, wipe):
-    package_repo_folder = os.path.join(build_folder, reference.name)
+# def task_parse_dependencies():
+#     return {'actions': [(parse_dependencies,)],
+#             'getargs': {'meta_repo_folder': ('export_meta_package', "meta_repo_folder"),
+#                         'user': ('export_meta_package', "user"),
+#                         'channel': ('export_meta_package', "channel"),
+#                         },
+#             'uptodate': [result_dep('export_meta_package')],
+#             'targets': [BUILD_CONFIG_NAME,],
+#             'verbosity': 2,
+#            }
+
+
+################################
+#
+#
+#
+################################
+def prepare_package_repository(name, gitrepo, gitbranch, build_folder, config, wipe):
+    package_repo_folder = os.path.join(build_folder, name)
     if wipe and os.path.exists(package_repo_folder):
         print("Removing pacakge-repo folder: %s" % package_repo_folder)
         shutil.rmtree(package_repo_folder)
-
-    branches = {v['name']: v['branch'] for v in config['dependencies']}
-    gitbranch = branches.get(reference.name, "master")
 
     scm = Git(folder=package_repo_folder)
     if os.path.exists(package_repo_folder) and os.listdir(package_repo_folder):
@@ -195,37 +225,45 @@ def prepare_package_repository(reference, gitrepo, build_folder, config, wipe):
     package_commit_rev = scm.get_commit()
 
     return {
-        "reference": str(reference),
+        "name": name,
         "commit_rev": package_commit_rev,
         "package_repo_folder": package_repo_folder,
     }
 
 
-def export_package(reference, package_repo_folder, package_commit_rev):
-    ref = ConanFileReference.loads(reference)
-
+################################
+#
+#
+#
+################################
+def export_package(user, channel, name, package_repo_folder, package_commit_rev):
     conan_api, client_cache, user_io = Conan.factory()
 
     try:
         _, project_reference = conan_api.info(package_repo_folder)
         version = project_reference.version
     except:
-        version = ref.version
+        raise ValueError("missing conan version for: %s" % name)
 
-    conan_api.export(package_repo_folder, name=ref.name, version=version,
-                     user=ref.user, channel=ref.channel)
+    conan_api.export(package_repo_folder, name=name, version=version,
+                     user=user, channel=channel)
 
     version = conan_api.inspect(package_repo_folder, attributes=['version'])['version']
     return {
         "commit_rev": package_commit_rev,
         "package_repo_folder": package_repo_folder,
-        "name": ref.name,
+        "name": name,
         "version": version,
-        "user": ref.user,
-        "channel": ref.channel,
+        "user": user,
+        "channel": channel,
         }
 
 
+################################
+#
+#
+#
+################################
 def build_release(deps, build_folder, config):
     name = config['meta_package']['name']
     version = config['meta_package']['version']
@@ -234,9 +272,7 @@ def build_release(deps, build_folder, config):
 
     package_repo_folder = os.path.join(build_folder, "meta")
 
-    build_modes = []
-    for ref in deps:
-        build_modes.append(ref.name)
+    build_modes = deps
 
     conan_api, client_cache, user_io = Conan.factory()
     result = conan_api.create(package_repo_folder, name=name, version=version,
@@ -251,9 +287,14 @@ def build_release(deps, build_folder, config):
     return {'packages': packages}
 
 
+################################
+#
+#
+#
+################################
 def deploy_release(packages, config):
     conan_api, client_cache, user_io = Conan.factory()
-    conan_repo = {v['name']: v['conan-repo'] for v in config['dependencies']}
+    conan_repo = {v['name']: v['conanuser'] for v in config['dependencies']}
 
     for package in packages:
         reference = ConanFileReference.loads(package['reference'])
@@ -272,22 +313,22 @@ def deploy_release(packages, config):
     return all_success
 
 
-@create_after(executed='parse_dependencies', target_regex='package_worker_.*')
+@create_after(executed='export_meta_package', target_regex='package_worker_.*')
 def task_package_worker_gen():
     if not os.path.exists(BUILD_CONFIG_NAME):
         return
 
     build_config = yaml.load(open(BUILD_CONFIG_NAME))
     deps = []
-    for ref_str, gitrepo in build_config['dependencies']:
-        ref = ConanFileReference.loads(ref_str)
-        if ref.name in SKIP_PACKAGES:
+    for dep_info in build_config['dependencies']:
+        name = dep_info["name"]
+        if name in SKIP_PACKAGES:
             continue
-        prepare_task_name = "package_worker_prepare_%s" % ref.name
+        prepare_task_name = "package_worker_prepare_%s" % name
         yield {
             'name': prepare_task_name,
             'file_dep': [BUILD_CONFIG_NAME,],
-            'actions': [(prepare_package_repository, [ref, gitrepo,])],
+            'actions': [(prepare_package_repository, [name, dep_info["gitrepo"], dep_info["gitbranch"]])],
             'params': [{'name': 'build_folder',
                         'short': 'f',
                         'default': 'build'},
@@ -301,19 +342,19 @@ def task_package_worker_gen():
             'uptodate': [False,],
         }
 
-        export_task_name = "package_worker_export_%s" % ref.name
+        export_task_name = "package_worker_export_%s" % name
         yield {
             'name': export_task_name,
             'file_dep': [BUILD_CONFIG_NAME,],
-            'actions': [(export_package,)],
-            'getargs': {'reference': ("package_worker_gen:%s" % prepare_task_name, "reference"),
+            'actions': [(export_package, [dep_info['conanuser'], dep_info.get('conanchannel', "stable")])],
+            'getargs': {'name': ("package_worker_gen:%s" % prepare_task_name, "name"),
                         'package_repo_folder': ("package_worker_gen:%s" % prepare_task_name, "package_repo_folder"),
                         'package_commit_rev': ("package_worker_gen:%s" % prepare_task_name, "commit_rev"),
                         },
             'uptodate': [result_dep("package_worker_gen:%s" % prepare_task_name),],
         }
 
-        deps.append(ref)
+        deps.append(name)
 
     yield {
         'name': 'package_worker_build',
@@ -324,7 +365,7 @@ def task_package_worker_gen():
                    ],
         'getargs': {'config': ('load_config', "config"),
                     },
-        'uptodate': [result_dep("package_worker_gen:package_worker_export_%s" % d.name) for d in deps],
+        'uptodate': [result_dep("package_worker_gen:package_worker_export_%s" % n) for n in deps],
     }
 
     yield {
