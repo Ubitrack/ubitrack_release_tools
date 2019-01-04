@@ -70,7 +70,7 @@ dependencies:
    branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_component_vision_aruco
-   branch: master
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_component_visualization
    branch: v1.3.0
