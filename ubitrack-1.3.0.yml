@@ -43,7 +43,7 @@ dependencies:
    branch: stable/4.2.5
    conan-repo: camposs
  - name: ubitrack
-   branch: master
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_virtualenv_generator
    branch: master
@@ -58,56 +58,56 @@ dependencies:
    branch: stable/2.5.3
    conan-repo: ubitrack
  - name: ubitrack_core
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_dataflow
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_component_core
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_component_vision
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_component_vision_aruco
    branch: master
    conan-repo: ubitrack
  - name: ubitrack_component_visualization
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_facade
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_vision
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_visualization
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_device_camera_avfoundation
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_device_camera_directshow
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_device_camera_msmf
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_device_camera_v4l
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_device_camera_flycapture
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_device_camera_kinect2
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_device_comm_zmq
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_device_tracker_art
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
  - name: ubitrack_lang_boost_python
-   branch: refactor_buildsystem_conan
+   branch: v1.3.0
    conan-repo: ubitrack
