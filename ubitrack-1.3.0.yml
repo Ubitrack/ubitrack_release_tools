@@ -4,7 +4,7 @@ meta_package:
   user: ubitrack
   channel: stable
   gitrepo: https://github.com/ubitrack/ubitrack
-  gitbranch: master
+  gitbranch: v1.3.0
 dependencies:
  - name: Boost
    branch: stable/1.64.0
