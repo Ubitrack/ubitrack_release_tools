@@ -268,7 +268,7 @@ def upload_package(name, version, user, channel, package_commit_rev, config):
     conan_api, client_cache, user_io = Conan.factory()
     conan_repo = {v['name']: v['conanuser'] for v in config['dependencies']}
 
-    ref = ConanFileReference.loads("%s/%s@%s/%s" % (name, version, user, channel))
+    ref = "%s/%s@%s/%s" % (name, version, user, channel)
     remote = conan_repo[name]
     if remote is not None:
         result = conan_api.upload(ref, confirm=True, remote_name=remote, policy="force-upload")
