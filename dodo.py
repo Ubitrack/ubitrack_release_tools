@@ -264,6 +264,29 @@ def export_package(user, channel, name, package_repo_folder, package_commit_rev)
 #
 #
 ################################
+def upload_package(name, version, user, channel, package_commit_rev, config):
+    conan_api, client_cache, user_io = Conan.factory()
+    conan_repo = {v['name']: v['conanuser'] for v in config['dependencies']}
+
+    ref = ConanFileReference.loads("%s/%s@%s/%s" % (name, version, user, channel))
+    remote = conan_repo[name]
+    if remote is not None:
+        result = conan_api.upload(ref, confirm=True, remote_name=remote, policy="force-upload")
+    
+    return {
+        "commit_rev": package_commit_rev,
+        "name": name,
+        "version": version,
+        "user": user,
+        "channel": channel,
+        }
+
+
+################################
+#
+#
+#
+################################
 def build_release(deps, build_folder, config):
     name = config['meta_package']['name']
     version = config['meta_package']['version']
@@ -324,6 +347,8 @@ def task_package_worker_gen():
         name = dep_info["name"]
         if name in SKIP_PACKAGES:
             continue
+
+        # first clone the dependency
         prepare_task_name = "package_worker_prepare_%s" % name
         yield {
             'name': prepare_task_name,
@@ -342,6 +367,7 @@ def task_package_worker_gen():
             'uptodate': [False,],
         }
 
+        # then export it into the local conan cache
         export_task_name = "package_worker_export_%s" % name
         yield {
             'name': export_task_name,
@@ -354,8 +380,25 @@ def task_package_worker_gen():
             'uptodate': [result_dep("package_worker_gen:%s" % prepare_task_name),],
         }
 
+        # then upload it to the conan repository
+        upload_task_name = "package_worker_upload_%s" % name
+        yield {
+            'name': upload_task_name,
+            'file_dep': [BUILD_CONFIG_NAME,],
+            'actions': [(upload_package,)],
+            'getargs': {'name': ("package_worker_gen:%s" % export_task_name, "name"),
+                        'version': ("package_worker_gen:%s" % export_task_name, "version"),
+                        'user': ("package_worker_gen:%s" % export_task_name, "user"),
+                        'channel': ("package_worker_gen:%s" % export_task_name, "channel"),
+                        'package_commit_rev': ("package_worker_gen:%s" % prepare_task_name, "commit_rev"),
+                        'config': ('load_config', "config"),
+                        },
+            'uptodate': [result_dep("package_worker_gen:%s" % export_task_name),],
+        }
+
         deps.append(name)
 
+    # now build the release
     yield {
         'name': 'package_worker_build',
         'actions': [(build_release, [deps,])],
@@ -365,9 +408,10 @@ def task_package_worker_gen():
                    ],
         'getargs': {'config': ('load_config', "config"),
                     },
-        'uptodate': [result_dep("package_worker_gen:package_worker_export_%s" % n) for n in deps],
+        'uptodate': [result_dep("package_worker_gen:package_worker_upload_%s" % n) for n in deps],
     }
 
+    # and deploy all resulting artefacts to the repository
     yield {
         'name': 'package_worker_deploy',
         'actions': [(deploy_release,)],
