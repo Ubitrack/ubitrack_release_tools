@@ -22,9 +22,15 @@ CONAN_PROJECTREFERENCE_IS_OBJECT = semver.gte(client_version, '1.7.0', True)
 BUILD_CONFIG_NAME = os.path.join(os.curdir, "build_config.yml")
 SKIP_PACKAGES = ["cmake_installer", ]
 
+#
+# These are commandline variables that are specified as follows:
+# doit varname=value varname=value ...
+#
 global_config = {"build_spec": get_var("build_spec", "ubitrack-1.3.0.yml"),
                  "build_folder": get_var("build_folder", "build"),
                  "upload": get_var("upload", "false").lower() == "true",
+                 "profile_name": get_var("profile_name", "default"),
+                 "custom_options": get_var("custom_options", None),
                  }
 
 
@@ -221,13 +227,21 @@ def build_release(deps, build_folder, config):
     user = config['meta_package']['user']
     channel = config['meta_package']['channel']
 
+    profile_name = global_config['profile_name']
+
     package_repo_folder = os.path.join(build_folder, "meta")
 
     build_modes = deps
 
+    options = None
+    custom_options_fname = global_config['custom_options']
+    if custom_options_fname:
+        options = yaml.load(open(custom_options_fname))
+
     conan_api, client_cache, user_io = Conan.factory()
     result = conan_api.create(package_repo_folder, name=name, version=version,
-                              user=user, channel=channel, build_modes=build_modes)
+                              user=user, channel=channel, build_modes=build_modes,
+                              profile_name=profile_name, options=options)
 
     packages = []
     for info in result['installed']:
