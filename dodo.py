@@ -8,7 +8,7 @@ import shutil
 import semver
 
 from doit.tools import result_dep
-from doit import create_after
+from doit import create_after, get_var
 
 from conans import __version__ as client_version
 from conans.client.conan_api import (Conan, default_manifest_folder)
@@ -21,6 +21,12 @@ from conans.client.runner import ConanRunner
 CONAN_PROJECTREFERENCE_IS_OBJECT = semver.gte(client_version, '1.7.0', True)
 BUILD_CONFIG_NAME = os.path.join(os.curdir, "build_config.yml")
 SKIP_PACKAGES = ["cmake_installer", ]
+
+global_config = {"build_spec": get_var("build_spec", "ubitrack-1.3.0.yml"),
+                 "build_folder": get_var("build_folder", "build"),
+                 "upload": get_var("upload", "false").lower() == "true",
+                 }
+
 
 class Git(ConanGit):
 
@@ -62,14 +68,7 @@ def load_config(config, build_folder):
 
 
 def task_load_config():
-    return {'actions': [(load_config,)],
-            'params': [{'name': 'config',
-                        'short': 'c',
-                        'default': 'ubitrack-1.3.0.yml'},
-                       {'name': 'build_folder',
-                        'short': 'f',
-                        'default': 'build'},
-                       ],
+    return {'actions': [(load_config,[global_config["build_spec"],global_config["build_folder"],])],
             'verbosity': 2,
             }
 
@@ -156,56 +155,6 @@ def task_export_meta_package():
 #
 #
 ################################
-# def parse_dependencies( meta_repo_folder, user, channel):
-#     conan_api, client_cache, user_io = Conan.factory()
-#     deps_graph, project_reference = conan_api.info(meta_repo_folder)
-
-#     all_references = []
-#     for node in sorted(deps_graph.nodes):
-#         conan = node.conanfile
-#         ref = node.conan_ref
-#         if not ref:
-#             # ref is only None iff info is being printed for a project directory, and
-#             # not a passed in reference
-#             if project_reference is None:
-#                 continue
-#             else:
-#                 if CONAN_PROJECTREFERENCE_IS_OBJECT:
-#                     ref = ConanFileReference.loads("%s/%s@%s/%s" % (project_reference.name,
-#                                                    project_reference.version, user, channel))
-#                 else:
-#                     ref = ConanFileReference.loads("%s@%s/%s" % (project_reference.split('@')[0], user, channel))
-#         all_references.append((str(ref), conan.url))
-
-#     build_config = {
-#         "meta_repo_folder": meta_repo_folder,
-#         "dependencies": all_references,
-#         "name": project_reference.name,
-#         "version": project_reference.version,
-#         "user": user,
-#         "channel": channel,
-#         }
-#     yaml.dump(build_config, open(BUILD_CONFIG_NAME, "w"))
-#     return True
-
-
-# def task_parse_dependencies():
-#     return {'actions': [(parse_dependencies,)],
-#             'getargs': {'meta_repo_folder': ('export_meta_package', "meta_repo_folder"),
-#                         'user': ('export_meta_package', "user"),
-#                         'channel': ('export_meta_package', "channel"),
-#                         },
-#             'uptodate': [result_dep('export_meta_package')],
-#             'targets': [BUILD_CONFIG_NAME,],
-#             'verbosity': 2,
-#            }
-
-
-################################
-#
-#
-#
-################################
 def prepare_package_repository(name, gitrepo, gitbranch, build_folder, config, wipe):
     package_repo_folder = os.path.join(build_folder, name)
     if wipe and os.path.exists(package_repo_folder):
@@ -265,13 +214,16 @@ def export_package(user, channel, name, package_repo_folder, package_commit_rev)
 #
 ################################
 def upload_package(name, version, user, channel, package_commit_rev, config):
-    conan_api, client_cache, user_io = Conan.factory()
-    conan_repo = {v['name']: v['conanuser'] for v in config['dependencies']}
+    if global_config["upload"]:
+        conan_api, client_cache, user_io = Conan.factory()
+        conan_repo = {v['name']: v['conanuser'] for v in config['dependencies']}
 
-    ref = "%s/%s@%s/%s" % (name, version, user, channel)
-    remote = conan_repo[name]
-    if remote is not None:
-        result = conan_api.upload(ref, confirm=True, remote_name=remote, policy="force-upload")
+        ref = "%s/%s@%s/%s" % (name, version, user, channel)
+        remote = conan_repo[name]
+        if remote is not None:
+            result = conan_api.upload(ref, confirm=True, remote_name=remote, policy="force-upload")
+    else:
+        print("Upload of packages sources is disabled: %s" % name)
     
     return {
         "commit_rev": package_commit_rev,
@@ -316,24 +268,28 @@ def build_release(deps, build_folder, config):
 #
 ################################
 def deploy_release(packages, config):
-    conan_api, client_cache, user_io = Conan.factory()
-    conan_repo = {v['name']: v['conanuser'] for v in config['dependencies']}
+    if global_config["upload"]:
+        conan_api, client_cache, user_io = Conan.factory()
+        conan_repo = {v['name']: v['conanuser'] for v in config['dependencies']}
 
-    for package in packages:
-        reference = ConanFileReference.loads(package['reference'])
-        if reference.name not in conan_repo:
-            print("skip uploading due to missing remote: %s" % str(reference))
-            continue
-        remote = conan_repo[reference.name]
-        all_success = True
-        for pid in package['package_ids']:
-            try:
-                result = conan_api.upload(package['reference'], package=pid, confirm=True, remote_name=remote,
-                                          policy="force-upload")
-            except Exception as e:
-                print(e)
-                all_success = False
-    return all_success
+        for package in packages:
+            reference = ConanFileReference.loads(package['reference'])
+            if reference.name not in conan_repo:
+                print("skip uploading due to missing remote: %s" % str(reference))
+                continue
+            remote = conan_repo[reference.name]
+            all_success = True
+            for pid in package['package_ids']:
+                try:
+                    result = conan_api.upload(package['reference'], package=pid, confirm=True, remote_name=remote,
+                                              policy="force-upload")
+                except Exception as e:
+                    print(e)
+                    all_success = False
+        return all_success
+    else:
+        print("Upload of binary artifacts is disabled")
+        return True
 
 
 @create_after(executed='export_meta_package', target_regex='package_worker_.*')
@@ -365,6 +321,7 @@ def task_package_worker_gen():
             'getargs': {'config': ('load_config', "config"),
                         },
             'uptodate': [False,],
+            'verbosity': 2,
         }
 
         # then export it into the local conan cache
@@ -378,6 +335,7 @@ def task_package_worker_gen():
                         'package_commit_rev': ("package_worker_gen:%s" % prepare_task_name, "commit_rev"),
                         },
             'uptodate': [result_dep("package_worker_gen:%s" % prepare_task_name),],
+            'verbosity': 2,
         }
 
         # then upload it to the conan repository
@@ -394,6 +352,7 @@ def task_package_worker_gen():
                         'config': ('load_config', "config"),
                         },
             'uptodate': [result_dep("package_worker_gen:%s" % export_task_name),],
+            'verbosity': 2,
         }
 
         deps.append(name)
@@ -409,6 +368,7 @@ def task_package_worker_gen():
         'getargs': {'config': ('load_config', "config"),
                     },
         'uptodate': [result_dep("package_worker_gen:package_worker_upload_%s" % n) for n in deps],
+        'verbosity': 2,
     }
 
     # and deploy all resulting artefacts to the repository
@@ -419,6 +379,7 @@ def task_package_worker_gen():
                     'config': ('load_config', "config"),
                     },
         'uptodate': [result_dep('package_worker_gen:package_worker_build'), ],
+        'verbosity': 2,
     }
 
 
