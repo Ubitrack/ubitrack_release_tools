@@ -101,20 +101,6 @@ def prepare_meta_repository(meta_repo_folder, config, wipe):
         "meta_repo_folder": meta_repo_folder,
     }
 
-def task_prepare_meta_repository():
-    return {'actions': [(prepare_meta_repository,)],
-            'params': [{'name': 'wipe',
-                        'short': 'w',
-                        'type': bool,
-                        'default': False},
-                       ],
-            'getargs': {'meta_repo_folder': ('load_config', "meta_repo_folder"),
-                        'config': ('load_config', "config"),
-                        },
-            'uptodate': [False,],
-            'verbosity': 2,
-           }
-
 
 ################################
 #
@@ -139,17 +125,6 @@ def export_meta_package(meta_repo_folder, meta_commit_rev, config):
         "user": user,
         "channel": channel,
         }
-
-
-def task_export_meta_package():
-    return {'actions': [(export_meta_package,)],
-            'getargs': {'meta_repo_folder': ('prepare_meta_repository', "meta_repo_folder"),
-                        'meta_commit_rev': ('prepare_meta_repository', "commit_rev"),
-                        'config': ('load_config', "config"),
-                        },
-            'uptodate': [result_dep('prepare_meta_repository')],
-            'verbosity': 2,
-           }
 
 
 ################################
@@ -293,7 +268,7 @@ def deploy_release(packages, config):
         return True
 
 
-@create_after(executed='export_meta_package', target_regex='package_worker_.*')
+@create_after(executed='load_config', target_regex='package_worker_.*')
 def task_package_worker_gen():
     if not os.path.exists(BUILD_CONFIG_NAME):
         return
@@ -358,6 +333,34 @@ def task_package_worker_gen():
 
         deps.append(name)
 
+    # prepare the meta repository
+    yield {
+        'name': 'prepare_meta_repository',
+        'actions': [(prepare_meta_repository,)],
+        'params': [{'name': 'wipe',
+                    'short': 'w',
+                    'type': bool,
+                    'default': False},
+                   ],
+        'getargs': {'meta_repo_folder': ('load_config', "meta_repo_folder"),
+                    'config': ('load_config', "config"),
+                    },
+        'uptodate': [result_dep("package_worker_gen:package_worker_upload_%s" % n) for n in deps],
+        'verbosity': 2,
+       }
+
+    # export the meta repository
+    yield {
+        'name': 'export_meta_package',
+        'actions': [(export_meta_package,)],
+        'getargs': {'meta_repo_folder': ('package_worker_gen:prepare_meta_repository', "meta_repo_folder"),
+                    'meta_commit_rev': ('package_worker_gen:prepare_meta_repository', "commit_rev"),
+                    'config': ('load_config', "config"),
+                    },
+        'uptodate': [result_dep('package_worker_gen:prepare_meta_repository')],
+        'verbosity': 2,
+       }
+
     # now build the release
     yield {
         'name': 'package_worker_build',
@@ -368,7 +371,7 @@ def task_package_worker_gen():
                    ],
         'getargs': {'config': ('load_config', "config"),
                     },
-        'uptodate': [result_dep("package_worker_gen:package_worker_upload_%s" % n) for n in deps],
+        'uptodate': [result_dep("package_worker_gen:export_meta_package")],
         'verbosity': 2,
     }
 
