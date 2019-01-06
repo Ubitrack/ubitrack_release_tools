@@ -68,7 +68,7 @@ def load_config(config, build_folder):
 
 
 def task_load_config():
-    return {'actions': [(load_config,[global_config["build_spec"],global_config["build_folder"],])],
+    return {'actions': [(load_config,[global_config["build_spec"], global_config["build_folder"],])],
             'verbosity': 2,
             }
 
@@ -127,7 +127,9 @@ def export_meta_package(meta_repo_folder, meta_commit_rev, config):
     user = config['meta_package']['user']
     channel = config['meta_package']['channel']
     conan_api, client_cache, user_io = Conan.factory()
-    conan_api.export(meta_repo_folder, name=name, version=version, user=user, channel=channel)
+
+    conan_api.export(meta_repo_folder, name=name, channel=channel, version=version, user=user)
+
     version = conan_api.inspect(meta_repo_folder, attributes=['version'])['version']
     return {
         "commit_rev": meta_commit_rev,
@@ -194,8 +196,7 @@ def export_package(user, channel, name, package_repo_folder, package_commit_rev)
     except:
         raise ValueError("missing conan version for: %s" % name)
 
-    conan_api.export(package_repo_folder, name=name, version=version,
-                     user=user, channel=channel)
+    conan_api.export(package_repo_folder, name=name, channel=channel, version=version, user=user)
 
     version = conan_api.inspect(package_repo_folder, attributes=['version'])['version']
     return {
