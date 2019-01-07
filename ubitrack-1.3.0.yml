@@ -6,6 +6,14 @@ meta_package:
   gitrepo: https://github.com/ubitrack/ubitrack
   gitbranch: v1.3.0
 dependencies:
+ - name: bzip2
+   gitrepo: https://github.com/ulricheck/conan-bzip2
+   gitbranch: stable/1.0.6
+   conanuser: camposs
+ - name: zlib
+   gitrepo: https://github.com/ulricheck/conan-zlib
+   gitbranch: stable/1.2.11
+   conanuser: camposs
  - name: Boost
    gitrepo: https://github.com/ulricheck/conan-boost
    gitbranch: stable/1.64.0
@@ -18,6 +26,10 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-clapack
    gitbranch: stable/3.2.1
    conanuser: camposs
+ - name: zmq
+   gitrepo: https://github.com/ulricheck/conan-zmq
+   gitbranch: stable/4.2.5
+   conanuser: camposs
  - name: cppzmq
    gitrepo: https://github.com/ulricheck/conan-cppzmq
    gitbranch: stable/4.2.2
@@ -25,6 +37,10 @@ dependencies:
  - name: glew
    gitrepo: https://github.com/ulricheck/conan-glew
    gitbranch: stable/2.1.0
+   conanuser: camposs
+ - name: glext
+   gitrepo: https://github.com/ulricheck/conan-glext
+   gitbranch: stable/1.3
    conanuser: camposs
  - name: glad
    gitrepo: https://github.com/ulricheck/conan-glad
@@ -34,10 +50,6 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-glfw
    gitbranch: stable/3.2.1
    conanuser: camposs
- - name: glext
-   gitrepo: https://github.com/ulricheck/conan-glext
-   gitbranch: stable/1.3
-   conanuser: camposs
  - name: msgpack
    gitrepo: https://github.com/ulricheck/conan-msgpack
    gitbranch: stable/2.1.5
@@ -46,18 +58,14 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-opencv
    gitbranch: stable/3.4.3
    conanuser: camposs
- - name: zlib
-   gitrepo: https://github.com/ulricheck/conan-zlib
-   gitbranch: stable/1.2.11
+ - name: librealsense
+   gitrepo: https://github.com/ulricheck/conan-librealsense
+   gitbranch: stable/2.16.5
    conanuser: camposs
- - name: zmq
-   gitrepo: https://github.com/ulricheck/conan-zmq
-   gitbranch: stable/4.2.5
+ - name: swig
+   gitrepo: https://github.com/ulricheck/conan-swig
+   gitbranch: stable/3.0.12
    conanuser: camposs
- - name: ubitrack
-   gitrepo: https://github.com/Ubitrack/ubitrack
-   gitbranch: v1.3.0
-   conanuser: ubitrack
  - name: ubitrack_boost_bindings
    gitrepo: https://github.com/Ubitrack/3rd_boost_bindings
    gitbranch: v1.3.0
@@ -74,8 +82,24 @@ dependencies:
    gitrepo: https://github.com/Ubitrack/utcore
    gitbranch: v1.3.0
    conanuser: ubitrack
+ - name: ubitrack_vision
+   gitrepo: https://github.com/Ubitrack/utvision
+   gitbranch: v1.3.0
+   conanuser: ubitrack
  - name: ubitrack_dataflow
    gitrepo: https://github.com/Ubitrack/utdataflow
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_visualization
+   gitrepo: https://github.com/Ubitrack/utvisualization
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_facade
+   gitrepo: https://github.com/Ubitrack/utfacade
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_hapticcalibration
+   gitrepo: https://github.com/Ubitrack/uthapticcalibration
    gitbranch: v1.3.0
    conanuser: ubitrack
  - name: ubitrack_component_core
@@ -94,16 +118,8 @@ dependencies:
    gitrepo: https://github.com/Ubitrack/component_visualization
    gitbranch: v1.3.0
    conanuser: ubitrack
- - name: ubitrack_facade
-   gitrepo: https://github.com/Ubitrack/utfacade
-   gitbranch: v1.3.0
-   conanuser: ubitrack
- - name: ubitrack_vision
-   gitrepo: https://github.com/Ubitrack/utvision
-   gitbranch: v1.3.0
-   conanuser: ubitrack
- - name: ubitrack_visualization
-   gitrepo: https://github.com/Ubitrack/utvisualization
+ - name: ubitrack_component_hapticcalibration
+   gitrepo: https://github.com/Ubitrack/component_haptic_calibration
    gitbranch: v1.3.0
    conanuser: ubitrack
  - name: ubitrack_device_camera_avfoundation
@@ -138,38 +154,6 @@ dependencies:
    gitrepo: https://github.com/Ubitrack/device_tracker_art
    gitbranch: v1.3.0
    conanuser: ubitrack
- - name: pybind11
-   gitrepo: https://github.com/ulricheck/conan-pybind11
-   gitbranch: stable/2.2.4
-   conanuser: camposs
- - name: librealsense
-   gitrepo: https://github.com/ulricheck/conan-librealsense
-   gitbranch: stable/2.16.5
-   conanuser: camposs
- - name: bzip2
-   gitrepo: https://github.com/ulricheck/conan-bzip2
-   gitbranch: stable/1.0.6
-   conanuser: camposs
- - name: swig
-   gitrepo: https://github.com/ulricheck/conan-swig
-   gitbranch: stable/3.0.12
-   conanuser: camposs
- - name: python_dev_config
-   gitrepo: https://github.com/ulricheck/conan-python_dev_config
-   gitbranch: master
-   conanuser: camposs
- - name: ubitrack_lang_python
-   gitrepo: https://github.com/Ubitrack/lang_python
-   gitbranch: v1.3.0
-   conanuser: ubitrack
- - name: ubitrack_hapticcalibration
-   gitrepo: https://github.com/Ubitrack/uthapticcalibration
-   gitbranch: v1.3.0
-   conanuser: ubitrack
- - name: ubitrack_tools_trackman
-   gitrepo: https://github.com/Ubitrack/tools_trackman_dist
-   gitbranch: v1.3.0
-   conanuser: ubitrack
  - name: ubitrack_device_camera_zed
    gitrepo: https://github.com/Ubitrack/device_camera_zed
    gitbranch: v1.3.0
@@ -178,11 +162,23 @@ dependencies:
    gitrepo: https://github.com/Ubitrack/device_camera_realsense
    gitbranch: v1.3.0
    conanuser: ubitrack
- - name: ubitrack_component_hapticcalibration
-   gitrepo: https://github.com/Ubitrack/component_haptic_calibration
+ - name: python_dev_config
+   gitrepo: https://github.com/ulricheck/conan-python_dev_config
+   gitbranch: master
+   conanuser: camposs
+ - name: pybind11
+   gitrepo: https://github.com/ulricheck/conan-pybind11
+   gitbranch: stable/2.2.4
+   conanuser: camposs
+ - name: ubitrack_lang_python
+   gitrepo: https://github.com/Ubitrack/lang_python
    gitbranch: v1.3.0
    conanuser: ubitrack
  - name: ubitrack_virtualenv_generator
    gitrepo: https://github.com/Ubitrack/ubitrack_virtualenv_generator
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_tools_trackman
+   gitrepo: https://github.com/Ubitrack/tools_trackman_dist
    gitbranch: v1.3.0
    conanuser: ubitrack
