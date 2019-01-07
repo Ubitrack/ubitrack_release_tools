@@ -1,6 +1,6 @@
 - ubitrack:with_haptic_calibration=True
 - ubitrack:with_python=True
-- python_dev_config:python=/usr/bin/python3
+- ubitrack_lang_python:python=/usr/bin/python3
 - ubitrack:with_camera_realsense=True
 - ubitrack:with_camera_zed=True
 - ubitrack_device_camera_zed:zedsdk_root=/usr/local/zed

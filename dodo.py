@@ -231,7 +231,7 @@ def build_release(deps, build_folder, config):
 
     package_repo_folder = os.path.join(build_folder, "meta")
 
-    build_modes = deps
+    build_modes = [name,] + deps
 
     options = None
     custom_options_fname = global_config['custom_options']
