@@ -1,2 +1,12 @@
 build_release.sh
 deploy_release.sh
+
+build/
+
+\.doit\.db\.dat
+
+\.doit\.db\.dir
+
+__pycache__/
+
+build_config\.yml
