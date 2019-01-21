@@ -60,7 +60,7 @@ dependencies:
    conanuser: camposs
  - name: librealsense
    gitrepo: https://github.com/ulricheck/conan-librealsense
-   gitbranch: stable/2.16.5
+   gitbranch: stable/2.17.1
    conanuser: camposs
  - name: swig
    gitrepo: https://github.com/ulricheck/conan-swig
