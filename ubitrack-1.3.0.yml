@@ -54,6 +54,10 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-msgpack
    gitbranch: stable/2.1.5
    conanuser: camposs
+ - name: cuda_dev_config
+   gitrepo: https://github.com/ulricheck/conan-cuda_dev_config
+   gitbranch: stable/0.1
+   conanuser: camposs
  - name: opencv
    gitrepo: https://github.com/ulricheck/conan-opencv
    gitbranch: stable/3.4.3
