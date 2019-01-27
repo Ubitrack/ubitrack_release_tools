@@ -70,6 +70,10 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-swig
    gitbranch: stable/3.0.12
    conanuser: camposs
+ - name: nvpipe
+   gitrepo: https://github.com/ulricheck/conan-nvpipe
+   gitbranch: stable/0.1
+   conanuser: camposs
  - name: ubitrack_boost_bindings
    gitrepo: https://github.com/Ubitrack/3rd_boost_bindings
    gitbranch: v1.3.0
@@ -164,6 +168,10 @@ dependencies:
    conanuser: ubitrack
  - name: ubitrack_device_camera_realsense
    gitrepo: https://github.com/Ubitrack/device_camera_realsense
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_device_comm_videostream
+   gitrepo: https://github.com/Ubitrack/device_comm_videostream
    gitbranch: v1.3.0
    conanuser: ubitrack
  - name: python_dev_config
