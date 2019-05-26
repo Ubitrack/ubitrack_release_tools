@@ -4,7 +4,7 @@ import os
 import sys
 import yaml
 import shutil
-
+import platform
 import semver
 
 from doit.tools import result_dep
@@ -21,6 +21,9 @@ from conans.client.runner import ConanRunner
 CONAN_PROJECTREFERENCE_IS_OBJECT = semver.gte(client_version, '1.7.0', True)
 BUILD_CONFIG_NAME = os.path.join(os.curdir, "build_config.yml")
 SKIP_PACKAGES = ["cmake_installer", ]
+if platform.system().startswith("Darwin"):
+    SKIP_PACKAGES.append("cuda_dev_config")
+    SKIP_PACKAGES.append("nvpipe")
 
 #
 # These are commandline variables that are specified as follows:
