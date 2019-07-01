@@ -174,10 +174,6 @@ dependencies:
    gitrepo: https://github.com/Ubitrack/device_camera_realsense
    gitbranch: v1.3.0
    conanuser: ubitrack
- - name: ubitrack_device_comm_videostream
-   gitrepo: https://github.com/Ubitrack/device_comm_videostream
-   gitbranch: v1.3.0
-   conanuser: ubitrack
  - name: python_dev_config
    gitrepo: https://github.com/ulricheck/conan-python_dev_config
    gitbranch: master
