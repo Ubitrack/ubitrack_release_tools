@@ -69,6 +69,7 @@ def load_config(config, build_folder):
         print("Loading profile: %s" % fname)
         ddata = yaml.load(open(os.path.join(profile_folder, fname)).read())
         dependencies.extend(ddata.get('dependencies', []))
+    data["dependencies"] = dependencies
 
     build_config = {
         "meta_repo_folder": meta_repo_folder,
