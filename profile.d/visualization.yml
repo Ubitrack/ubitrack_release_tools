@@ -1,0 +1,17 @@
+dependencies:
+ - name: assimp
+   gitrepo: https://github.com/ulricheck/conan-assimp
+   gitbranch: stable/4.1.0
+   conanuser: camposs
+ - name: glfw
+   gitrepo: https://github.com/ulricheck/conan-glfw
+   gitbranch: stable/3.2.1
+   conanuser: camposs
+ - name: ubitrack_visualization
+   gitrepo: https://github.com/Ubitrack/utvisualization
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_component_visualization
+   gitrepo: https://github.com/Ubitrack/component_visualization
+   gitbranch: v1.3.0
+   conanuser: ubitrack

@@ -22,6 +22,8 @@ CONAN_PROJECTREFERENCE_IS_OBJECT = semver.gte(client_version, '1.7.0', True)
 CONAN_PROFILENAMES_IS_LIST = semver.gte(client_version, '1.12.0', True)
 BUILD_CONFIG_NAME = os.path.join(os.curdir, "build_config.yml")
 SKIP_PACKAGES = ["cmake_installer", ]
+
+# this should be configurable in build_spec
 if platform.system().startswith("Darwin"):
     SKIP_PACKAGES.append("cuda_dev_config")
     SKIP_PACKAGES.append("nvpipe")
@@ -30,11 +32,10 @@ if platform.system().startswith("Darwin"):
 # These are commandline variables that are specified as follows:
 # doit varname=value varname=value ...
 #
-global_config = {"build_spec": get_var("build_spec", "ubitrack-1.3.0.yml"),
+global_config = {"build_spec": get_var("build_spec", "default_build.yml"),
                  "build_folder": get_var("build_folder", "build"),
                  "upload": get_var("upload", "false").lower() == "true",
                  "profile_name": get_var("profile_name", "default"),
-                 "custom_options": get_var("custom_options", None),
                  }
 
 
@@ -61,10 +62,17 @@ def load_config(config, build_folder):
     data = yaml.load(open(config).read())
     # use os.curdir if not an absolute path ?
     meta_repo_folder = os.path.join(build_folder, "meta")
+    profile_folder = data['config']['profile_directory']
+
+    dependencies = []
+    for fname in data['profiles']:
+        print("Loading profile: %s" % fname)
+        ddata = yaml.load(open(os.path.join(profile_folder, fname)).read())
+        dependencies.extend(ddata.get('dependencies', []))
 
     build_config = {
         "meta_repo_folder": meta_repo_folder,
-        "dependencies": data['dependencies'],
+        "dependencies": dependencies,
         "name": data["meta_package"]["name"],
         "version": data["meta_package"]["version"],
         "user": data["meta_package"]["user"],
@@ -237,10 +245,7 @@ def build_release(deps, build_folder, config):
 
     build_modes = [name,] + deps
 
-    options = None
-    custom_options_fname = global_config['custom_options']
-    if custom_options_fname:
-        options = yaml.load(open(custom_options_fname))
+    options = config.get('options', [])
 
     conan_api, client_cache, user_io = Conan.factory()
 

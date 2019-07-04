@@ -1,0 +1,69 @@
+dependencies:
+ - name: bzip2
+   gitrepo: https://github.com/ulricheck/conan-bzip2
+   gitbranch: stable/1.0.6
+   conanuser: camposs
+ - name: zlib
+   gitrepo: https://github.com/ulricheck/conan-zlib
+   gitbranch: stable/1.2.11
+   conanuser: camposs
+ - name: Boost
+   gitrepo: https://github.com/ulricheck/conan-boost
+   gitbranch: stable/1.64.0
+   conanuser: camposs
+ - name: clapack
+   gitrepo: https://github.com/ulricheck/conan-clapack
+   gitbranch: stable/3.2.1
+   conanuser: camposs
+ - name: swig
+   gitrepo: https://github.com/ulricheck/conan-swig
+   gitbranch: stable/3.0.12
+   conanuser: camposs
+ - name: cuda_dev_config
+   gitrepo: https://github.com/ulricheck/conan-cuda_dev_config
+   gitbranch: stable/0.1
+   conanuser: camposs
+ - name: ubitrack_boost_bindings
+   gitrepo: https://github.com/Ubitrack/3rd_boost_bindings
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_log4cpp
+   gitrepo: https://github.com/Ubitrack/3rd_log4cpp
+   gitbranch: stable/0.3.5
+   conanuser: ubitrack
+ - name: ubitrack_tinyxml
+   gitrepo: https://github.com/Ubitrack/3rd_tinyxml
+   gitbranch: stable/2.5.3
+   conanuser: ubitrack
+ - name: ubitrack_core
+   gitrepo: https://github.com/Ubitrack/utcore
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_dataflow
+   gitrepo: https://github.com/Ubitrack/utdataflow
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_facade
+   gitrepo: https://github.com/Ubitrack/utfacade
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_component_core
+   gitrepo: https://github.com/Ubitrack/component_core
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_hapticcalibration
+   gitrepo: https://github.com/Ubitrack/uthapticcalibration
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_component_hapticcalibration
+   gitrepo: https://github.com/Ubitrack/component_haptic_calibration
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_virtualenv_generator
+   gitrepo: https://github.com/Ubitrack/ubitrack_virtualenv_generator
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_tools_trackman
+   gitrepo: https://github.com/Ubitrack/tools_trackman_dist
+   gitbranch: v1.3.0
+   conanuser: ubitrack

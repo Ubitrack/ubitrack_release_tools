@@ -1,0 +1,37 @@
+dependencies:
+ - name: librealsense
+   gitrepo: https://github.com/ulricheck/conan-librealsense
+   gitbranch: stable/2.20.0
+   conanuser: camposs
+ - name: ubitrack_device_camera_avfoundation
+   gitrepo: https://github.com/Ubitrack/device_camera_avfoundation
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_device_camera_directshow
+   gitrepo: https://github.com/Ubitrack/device_camera_directshow
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_device_camera_msmf
+   gitrepo: https://github.com/Ubitrack/device_camera_msmf
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_device_camera_v4l
+   gitrepo: https://github.com/Ubitrack/device_camera_v4l
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_device_camera_flycapture
+   gitrepo: https://github.com/Ubitrack/device_camera_flycapture
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_device_camera_kinect2
+   gitrepo: https://github.com/Ubitrack/device_camera_kinect2
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_device_camera_zed
+   gitrepo: https://github.com/Ubitrack/device_camera_zed
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_device_camera_realsense
+   gitrepo: https://github.com/Ubitrack/device_camera_realsense
+   gitbranch: v1.3.0
+   conanuser: ubitrack

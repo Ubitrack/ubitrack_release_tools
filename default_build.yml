@@ -1,0 +1,21 @@
+config:
+  profile_directory: ./profile.d
+meta_package:
+  name: ubitrack
+  version: 1.3.0
+  user: ubitrack
+  channel: stable
+  gitrepo: https://github.com/ubitrack/ubitrack
+  gitbranch: v1.3.0
+profiles:
+  - core.yml
+  - vision.yml
+  - visualization.yml
+  - device_tracker.yml
+  - device_camera.yml
+  - device_comm.yml
+  - lang_python.yml
+options:
+  - ubitrack:with_haptic_calibration=True
+  - ubitrack:with_python=True
+  - ubitrack_lang_python:python=/usr/bin/python3
