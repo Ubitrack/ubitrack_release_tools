@@ -7,10 +7,6 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-cppzmq
    gitbranch: stable/4.2.2
    conanuser: camposs
- - name: msgpack
-   gitrepo: https://github.com/ulricheck/conan-msgpack
-   gitbranch: stable/2.1.5
-   conanuser: camposs
  - name: nvpipe
    gitrepo: https://github.com/ulricheck/conan-nvpipe
    gitbranch: stable/0.1

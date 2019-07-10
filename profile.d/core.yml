@@ -23,6 +23,10 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-cuda_dev_config
    gitbranch: stable/0.1
    conanuser: camposs
+ - name: msgpack
+   gitrepo: https://github.com/ulricheck/conan-msgpack
+   gitbranch: stable/2.1.5
+   conanuser: camposs
  - name: ubitrack_boost_bindings
    gitrepo: https://github.com/Ubitrack/3rd_boost_bindings
    gitbranch: v1.3.0
