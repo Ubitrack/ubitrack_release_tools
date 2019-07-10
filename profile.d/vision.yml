@@ -11,10 +11,6 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-glad
    gitbranch: stable/0.1.27
    conanuser: camposs
- - name: opencv
-   gitrepo: https://github.com/ulricheck/conan-opencv
-   gitbranch: stable/3.4.3
-   conanuser: camposs
  - name: ubitrack_vision
    gitrepo: https://github.com/Ubitrack/utvision
    gitbranch: v1.3.0
