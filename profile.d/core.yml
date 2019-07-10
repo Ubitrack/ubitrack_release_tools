@@ -31,6 +31,18 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-opencv
    gitbranch: stable/3.4.3
    conanuser: camposs
+ - name: glew
+   gitrepo: https://github.com/ulricheck/conan-glew
+   gitbranch: stable/2.1.0
+   conanuser: camposs
+ - name: glext
+   gitrepo: https://github.com/ulricheck/conan-glext
+   gitbranch: stable/1.3
+   conanuser: camposs
+ - name: glad
+   gitrepo: https://github.com/ulricheck/conan-glad
+   gitbranch: stable/0.1.27
+   conanuser: camposs
  - name: ubitrack_boost_bindings
    gitrepo: https://github.com/Ubitrack/3rd_boost_bindings
    gitbranch: v1.3.0
