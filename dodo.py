@@ -18,6 +18,9 @@ from conans.client.tools import Git as ConanGit
 from conans.client.runner import ConanRunner
 
 
+import workspace.ubitrackWorkspace
+
+
 CONAN_PROJECTREFERENCE_IS_OBJECT = semver.gte(client_version, '1.7.0', True)
 CONAN_PROFILENAMES_IS_LIST = semver.gte(client_version, '1.12.0', True)
 BUILD_CONFIG_NAME = os.path.join(os.curdir, "build_config.yml")
@@ -36,6 +39,7 @@ global_config = {"build_spec": get_var("build_spec", "default_build.yml"),
                  "build_folder": get_var("build_folder", "build"),
                  "upload": get_var("upload", "false").lower() == "true",
                  "profile_name": get_var("profile_name", "default"),
+                 "workspace": get_var("workspace", "false").lower() == "true",
                  }
 
 
@@ -159,9 +163,12 @@ def prepare_package_repository(name, gitrepo, gitbranch, build_folder, config, w
 
     scm = Git(folder=package_repo_folder)
     if os.path.exists(package_repo_folder) and os.listdir(package_repo_folder):
-        print("Updating package-repository: %s - %s" % (gitrepo, gitbranch))
-        out = scm.update()
-        print("Updated package-repository.\n %s" % out)
+        if not global_config["workspace"]:
+            print("Updating package-repository: %s - %s" % (gitrepo, gitbranch))
+            out = scm.update()
+            print("Updated package-repository.\n %s" % out)
+        else:
+            print("Local Workspace build, not updating from git: %s - %s" % (gitrepo, gitbranch))
     else:
         print("Cloning package-repository: %s - %s" % (gitrepo, gitbranch))
         out = scm.clone(gitrepo, branch=gitbranch)
@@ -302,6 +309,78 @@ def deploy_release(packages, config):
         print("Upload of binary artifacts is disabled")
         return True
 
+################################
+#
+#
+#
+################################
+def build_workspace(deps, build_folder, config):
+    name = config['meta_package']['name']
+    version = config['meta_package']['version']
+    user = config['meta_package']['user']
+    channel = config['meta_package']['channel']
+
+    workspace_filename = os.path.join(os.curdir,build_folder, "conanws.yml")     
+
+    installFolder = os.path.join(os.curdir,"install")
+    installFolder = os.path.abspath(installFolder)
+
+    # create install folder
+    # should the folder be cleared before installing? cases like renaming a pattern file
+    if not os.path.exists(installFolder):
+        os.mkdir(installFolder)
+        #shutil.rmtree(installFolder)
+
+
+
+    # Format of workspace config file: conanws.yml
+
+
+    #editables:    
+    #    ubitrack_core/1.3.0@user/dev:
+    #        path: utcore
+    #    ubitrack_vision/1.3.0@user/dev:
+    #        path: utvision      
+    #    ubitrack/1.3.0@user/dev:
+    #        path: ubitrack
+    #        layout: layout_gcc_ubitrack
+    #layout: layout_gcc
+    #workspace_generator: cmake
+    #root: ubitrack/1.3.0@user/dev
+
+    
+    editables = {}
+
+    for dep in deps:
+        key =  "{0}/{1}@{2}/{3}".format(dep, version, "local", "dev") 
+        edit = {"path" : dep}
+
+        if dep.startswith("ubitrack"):
+            editables[key] = edit
+
+
+    key =  "{0}/{1}@{2}/{3}".format("meta", version, "local", "dev") 
+    edit = {"path" : "meta" , "layout" : "../workspace/layout_gcc_ubitrack"}
+    editables[key] = edit
+
+    workspace_config = {
+        "editables": editables,
+        "layout": "../workspace/layout_gcc",
+        "workspace_generator": "cmake",
+        "root": key,
+  
+        }
+
+    
+    yaml.dump(workspace_config, open(workspace_filename, "w"))
+
+    conan_api, client_cache, user_io = Conan.factory()
+
+    build_parameter = ["*:workspaceBuild=True"]
+
+    result = conan_api.workspace_install(build_folder, options=build_parameter, install_folder=installFolder)
+
+    return {}
 
 @create_after(executed='load_config', target_regex='package_worker_.*')
 def task_package_worker_gen():
@@ -335,91 +414,128 @@ def task_package_worker_gen():
             'verbosity': 2,
         }
 
-        # then export it into the local conan cache
-        export_task_name = "package_worker_export_%s" % name
-        yield {
-            'name': export_task_name,
-            'file_dep': [BUILD_CONFIG_NAME,],
-            'actions': [(export_package, [dep_info['conanuser'], dep_info.get('conanchannel', "stable")])],
-            'getargs': {'name': ("package_worker_gen:%s" % prepare_task_name, "name"),
-                        'package_repo_folder': ("package_worker_gen:%s" % prepare_task_name, "package_repo_folder"),
-                        'package_commit_rev': ("package_worker_gen:%s" % prepare_task_name, "commit_rev"),
-                        },
-            'uptodate': [result_dep("package_worker_gen:%s" % prepare_task_name),],
-            'verbosity': 2,
-        }
+        # for local workspace build do not export or upload the code to conan as we are currently working with local direcories
+        if not global_config["workspace"]:
 
-        # then upload it to the conan repository
-        upload_task_name = "package_worker_upload_%s" % name
-        yield {
-            'name': upload_task_name,
-            'file_dep': [BUILD_CONFIG_NAME,],
-            'actions': [(upload_package,)],
-            'getargs': {'name': ("package_worker_gen:%s" % export_task_name, "name"),
-                        'version': ("package_worker_gen:%s" % export_task_name, "version"),
-                        'user': ("package_worker_gen:%s" % export_task_name, "user"),
-                        'channel': ("package_worker_gen:%s" % export_task_name, "channel"),
-                        'package_commit_rev': ("package_worker_gen:%s" % prepare_task_name, "commit_rev"),
-                        'config': ('load_config', "config"),
-                        },
-            'uptodate': [result_dep("package_worker_gen:%s" % export_task_name),],
-            'verbosity': 2,
-        }
+            # then export it into the local conan cache
+            export_task_name = "package_worker_export_%s" % name
+            yield {
+                'name': export_task_name,
+                'file_dep': [BUILD_CONFIG_NAME,],
+                'actions': [(export_package, [dep_info['conanuser'], dep_info.get('conanchannel', "stable")])],
+                'getargs': {'name': ("package_worker_gen:%s" % prepare_task_name, "name"),
+                            'package_repo_folder': ("package_worker_gen:%s" % prepare_task_name, "package_repo_folder"),
+                            'package_commit_rev': ("package_worker_gen:%s" % prepare_task_name, "commit_rev"),
+                            },
+                'uptodate': [result_dep("package_worker_gen:%s" % prepare_task_name),],
+                'verbosity': 2,
+            }
+
+            # then upload it to the conan repository
+            upload_task_name = "package_worker_upload_%s" % name
+            yield {
+                'name': upload_task_name,
+                'file_dep': [BUILD_CONFIG_NAME,],
+                'actions': [(upload_package,)],
+                'getargs': {'name': ("package_worker_gen:%s" % export_task_name, "name"),
+                            'version': ("package_worker_gen:%s" % export_task_name, "version"),
+                            'user': ("package_worker_gen:%s" % export_task_name, "user"),
+                            'channel': ("package_worker_gen:%s" % export_task_name, "channel"),
+                            'package_commit_rev': ("package_worker_gen:%s" % prepare_task_name, "commit_rev"),
+                            'config': ('load_config', "config"),
+                            },
+                'uptodate': [result_dep("package_worker_gen:%s" % export_task_name),],
+                'verbosity': 2,
+            }
 
         deps.append(name)
 
-    # prepare the meta repository
-    yield {
-        'name': 'prepare_meta_repository',
-        'actions': [(prepare_meta_repository,)],
-        'params': [{'name': 'wipe',
-                    'short': 'w',
-                    'type': bool,
-                    'default': False},
-                   ],
-        'getargs': {'meta_repo_folder': ('load_config', "meta_repo_folder"),
-                    'config': ('load_config', "config"),
-                    },
-        'uptodate': [result_dep("package_worker_gen:package_worker_upload_%s" % n) for n in deps],
-        'verbosity': 2,
-       }
 
-    # export the meta repository
-    yield {
-        'name': 'export_meta_package',
-        'actions': [(export_meta_package,)],
-        'getargs': {'meta_repo_folder': ('package_worker_gen:prepare_meta_repository', "meta_repo_folder"),
-                    'meta_commit_rev': ('package_worker_gen:prepare_meta_repository', "commit_rev"),
-                    'config': ('load_config', "config"),
-                    },
-        'uptodate': [result_dep('package_worker_gen:prepare_meta_repository')],
-        'verbosity': 2,
-       }
+    
 
-    # now build the release
-    yield {
-        'name': 'package_worker_build',
-        'actions': [(build_release, [deps,])],
-        'params': [{'name': 'build_folder',
-                    'short': 'f',
-                    'default': 'build'},
-                   ],
-        'getargs': {'config': ('load_config', "config"),
-                    },
-        'uptodate': [result_dep("package_worker_gen:export_meta_package")],
-        'verbosity': 2,
-    }
+    if global_config["workspace"]:
+        # prepare the meta repository
+        yield {
+            'name': 'prepare_meta_repository',
+            'actions': [(prepare_meta_repository,)],
+            'params': [{'name': 'wipe',
+                        'short': 'w',
+                        'type': bool,
+                        'default': False},
+                       ],
+            'getargs': {'meta_repo_folder': ('load_config', "meta_repo_folder"),
+                        'config': ('load_config', "config"),
+                        },
+            'uptodate': [False],
+            'verbosity': 2,
+           }
 
-    # and deploy all resulting artefacts to the repository
-    yield {
-        'name': 'package_worker_deploy',
-        'actions': [(deploy_release,)],
-        'getargs': {'packages': ('package_worker_gen:package_worker_build', "packages"),
-                    'config': ('load_config', "config"),
-                    },
-        'uptodate': [result_dep('package_worker_gen:package_worker_build'), ],
-        'verbosity': 2,
-    }
+        yield {
+            'name': 'package_worker_workspace_build',
+            'actions': [(build_workspace, [deps,])],
+            'params': [{'name': 'build_folder',
+                        'short': 'f',
+                        'default': 'build'},
+                       ],
+            'getargs': {'config': ('load_config', "config"),
+                        },
+            #'uptodate': [result_dep("package_worker_gen:export_meta_package")],
+            'uptodate': [False],
+            'verbosity': 2,
+        }
+    else:
+        # prepare the meta repository
+        yield {
+            'name': 'prepare_meta_repository',
+            'actions': [(prepare_meta_repository,)],
+            'params': [{'name': 'wipe',
+                        'short': 'w',
+                        'type': bool,
+                        'default': False},
+                       ],
+            'getargs': {'meta_repo_folder': ('load_config', "meta_repo_folder"),
+                        'config': ('load_config', "config"),
+                        },
+            'uptodate': [result_dep("package_worker_gen:package_worker_upload_%s" % n) for n in deps],
+            'verbosity': 2,
+           }
+
+        # export the meta repository
+        yield {
+            'name': 'export_meta_package',
+            'actions': [(export_meta_package,)],
+            'getargs': {'meta_repo_folder': ('package_worker_gen:prepare_meta_repository', "meta_repo_folder"),
+                        'meta_commit_rev': ('package_worker_gen:prepare_meta_repository', "commit_rev"),
+                        'config': ('load_config', "config"),
+                        },
+            'uptodate': [result_dep('package_worker_gen:prepare_meta_repository')],
+            'verbosity': 2,
+           }
+
+        # now build the release
+        yield {
+            'name': 'package_worker_build',
+            'actions': [(build_release, [deps,])],
+            'params': [{'name': 'build_folder',
+                        'short': 'f',
+                        'default': 'build'},
+                       ],
+            'getargs': {'config': ('load_config', "config"),
+                        },
+            'uptodate': [result_dep("package_worker_gen:export_meta_package")],
+            'verbosity': 2,
+        }
+
+        # and deploy all resulting artefacts to the repository
+        yield {
+            'name': 'package_worker_deploy',
+            'actions': [(deploy_release,)],
+            'getargs': {'packages': ('package_worker_gen:package_worker_build', "packages"),
+                        'config': ('load_config', "config"),
+                        },
+            'uptodate': [result_dep('package_worker_gen:package_worker_build'), ],
+            'verbosity': 2,
+        }
 
 
 if __name__ == '__main__':
