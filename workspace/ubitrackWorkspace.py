@@ -75,30 +75,31 @@ import conans.client.cmd.build as _build
 
 from conans.client.conan_api import get_graph_info
 
+
 def workspace_install(self, path, settings=None, options=None, env=None,
                           remote_name=None, build=None, profile_name=None,
                           update=False, cwd=None, install_folder=None):
         cwd = cwd or get_cwd()
         abs_path = os.path.normpath(os.path.join(cwd, path))
 
-        remotes = self._cache.registry.load_remotes()
+        remotes = self.app.cache.registry.load_remotes()
         remotes.select(remote_name)
-        self._python_requires.enable_remotes(update=update, remotes=remotes)
+        self.app.python_requires.enable_remotes(update=update, remotes=remotes)
 
-        workspace = Workspace(abs_path, self._cache)
+        workspace = Workspace(abs_path, self.app.cache)
         graph_info = get_graph_info(profile_name, settings, options, env, cwd, None,
-                                    self._cache, self._user_io.out)
+                                    self.app.cache, self.app.out)
 
-        self._user_io.out.info("Configuration:")
-        self._user_io.out.writeln(graph_info.profile.dumps())
+        self.app.out.info("Configuration:")
+        self.app.out.writeln(graph_info.profile.dumps())
 
-        self._cache.editable_packages.override(workspace.get_editable_dict())
+        self.app.cache.editable_packages.override(workspace.get_editable_dict())
 
         recorder = ActionRecorder()
-        deps_graph, _ = self._graph_manager.load_graph(workspace.root, None, graph_info, build,
+        deps_graph, _ = self.app.graph_manager.load_graph(workspace.root, None, graph_info, build,
                                                        False, update, remotes, recorder)
 
-        print_graph(deps_graph, self._user_io.out)
+        print_graph(deps_graph, self.app.out)
 
         # Inject the generators before installing
         for node in deps_graph.nodes:
@@ -109,14 +110,14 @@ def workspace_install(self, path, settings=None, options=None, env=None,
                     tmp.extend([g for g in generators if g not in tmp])
                     node.conanfile.generators = tmp
 
-        installer = BinaryInstaller(self._cache, self._user_io.out, self._remote_manager,
-                                    recorder=recorder, hook_manager=self._hook_manager)
+        installer = BinaryInstaller(self.app.cache, self.app.out, self.app.remote_manager,
+                                    recorder=recorder, hook_manager=self.app.hook_manager)
         installer.install(deps_graph, remotes, keep_build=False, graph_info=graph_info)
 
         install_folder = install_folder or cwd
-        workspace.generate(install_folder, deps_graph, self._user_io.out)
+        workspace.generate(install_folder, deps_graph, self.app.out)
 
-        workspace.build(install_folder, deps_graph, self._user_io.out,self._hook_manager, self._graph_manager)
+        workspace.build(install_folder, deps_graph, self.app.out,self.app.hook_manager, self.app.graph_manager)
 
 
 def build(self, install_folder, graph, output, hook_mangaer, graph_manager):        

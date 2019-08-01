@@ -359,7 +359,7 @@ def build_workspace(deps, build_folder, config):
             editables[key] = edit
 
 
-    key =  "{0}/{1}@{2}/{3}".format("meta", version, "local", "dev") 
+    key =  "{0}/{1}@{2}/{3}".format("ubitrack", version, "local", "dev") 
     edit = {"path" : "meta" , "layout" : "../workspace/layout_gcc_ubitrack"}
     editables[key] = edit
 
@@ -375,6 +375,7 @@ def build_workspace(deps, build_folder, config):
     yaml.dump(workspace_config, open(workspace_filename, "w"))
 
     conan_api, client_cache, user_io = Conan.factory()
+    conan_api.create_app()
 
     build_parameter = ["*:workspaceBuild=True"]
 
