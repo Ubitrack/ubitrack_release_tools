@@ -199,7 +199,12 @@ def export_package(user, channel, name, package_repo_folder, package_commit_rev)
 
     conan_api.export(package_repo_folder, name=name, channel=channel, version=version, user=user)
 
-    version = conan_api.inspect(package_repo_folder, attributes=['version'])['version']
+    try:
+        conan_file_loc = os.path.join(package_repo_folder, "conanfile.py")
+        version = conan_api.inspect(conan_file_loc, attributes=['version'])['version']
+    except ConanException as e:
+        print("error retrieving version from package: %s" % str(e))
+
     return {
         "commit_rev": package_commit_rev,
         "package_repo_folder": package_repo_folder,
