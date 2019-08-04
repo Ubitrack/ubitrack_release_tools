@@ -1,7 +1,7 @@
 dependencies:
  - name: librealsense
    gitrepo: https://github.com/ulricheck/conan-librealsense
-   gitbranch: stable/2.20.0
+   gitbranch: stable/2.24.0
    conanuser: camposs
  - name: ubitrack_device_camera_avfoundation
    gitrepo: https://github.com/Ubitrack/device_camera_avfoundation
