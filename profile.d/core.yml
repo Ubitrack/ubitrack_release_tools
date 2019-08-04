@@ -55,6 +55,10 @@ dependencies:
    gitrepo: https://github.com/Ubitrack/3rd_tinyxml
    gitbranch: stable/2.5.3
    conanuser: ubitrack
+ - name: ubitrack_virtualenv_generator
+   gitrepo: https://github.com/Ubitrack/ubitrack_virtualenv_generator
+   gitbranch: v1.3.0
+   conanuser: ubitrack
  - name: ubitrack_core
    gitrepo: https://github.com/Ubitrack/utcore
    gitbranch: v1.3.0
@@ -77,10 +81,6 @@ dependencies:
    conanuser: ubitrack
  - name: ubitrack_component_hapticcalibration
    gitrepo: https://github.com/Ubitrack/component_haptic_calibration
-   gitbranch: v1.3.0
-   conanuser: ubitrack
- - name: ubitrack_virtualenv_generator
-   gitrepo: https://github.com/Ubitrack/ubitrack_virtualenv_generator
    gitbranch: v1.3.0
    conanuser: ubitrack
  - name: ubitrack_tools_trackman

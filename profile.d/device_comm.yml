@@ -7,14 +7,6 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-cppzmq
    gitbranch: stable/4.2.2
    conanuser: camposs
- - name: nvpipe
-   gitrepo: https://github.com/ulricheck/conan-nvpipe
-   gitbranch: stable/0.1
-   conanuser: camposs
- - name: nvenc_rtsp
-   gitrepo: https://github.com/TUM-CAMP-NARVIS/nvenc_rtsp.git
-   gitbranch: stable/0.1
-   conanuser: artekmed
  - name: ubitrack_device_comm_zmq
    gitrepo: https://github.com/Ubitrack/device_comm_zmq
    gitbranch: v1.3.0

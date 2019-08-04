@@ -14,6 +14,7 @@ profiles:
   - device_tracker.yml
   - device_camera.yml
   - device_comm.yml
+  - device_comm_cuda.yml
   - lang_python.yml
 options:
   - ubitrack:with_haptic_calibration=True
