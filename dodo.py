@@ -6,6 +6,7 @@ import yaml
 import shutil
 import platform
 import semver
+from fnmatch import fnmatch
 
 from doit.tools import result_dep
 from doit import create_after, get_var
@@ -40,6 +41,7 @@ global_config = {"build_spec": get_var("build_spec", "default_build.yml"),
                  "upload": get_var("upload", "false").lower() == "true",
                  "profile_name": get_var("profile_name", "default"),
                  "workspace": get_var("workspace", "false").lower() == "true",
+                 "deps_build_filter": get_var("deps_build_filter", "*"),
                  }
 
 
@@ -262,7 +264,9 @@ def build_release(deps, build_folder, config):
 
     package_repo_folder = os.path.join(build_folder, "meta")
 
-    build_modes = [name,] + deps
+    deps_build_filter = global_config.get('deps_build_filter', '*')
+
+    build_modes = [name,] + [d for d in deps if fnmatch(d, deps_build_filter)]
 
     options = config.get('options', [])
 
