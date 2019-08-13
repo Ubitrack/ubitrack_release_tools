@@ -5,7 +5,7 @@ dependencies:
    conanuser: camposs
  - name: pybind11
    gitrepo: https://github.com/ulricheck/conan-pybind11
-   gitbranch: stable/2.2.4
+   gitbranch: stable/2.3.0
    conanuser: camposs
  - name: ubitrack_lang_python
    gitrepo: https://github.com/Ubitrack/lang_python
