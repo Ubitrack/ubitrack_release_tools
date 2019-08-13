@@ -9,7 +9,7 @@ dependencies:
    conanuser: camposs
  - name: Boost
    gitrepo: https://github.com/ulricheck/conan-boost
-   gitbranch: stable/1.64.0
+   gitbranch: stable/1.70.0
    conanuser: camposs
  - name: clapack
    gitrepo: https://github.com/ulricheck/conan-clapack
