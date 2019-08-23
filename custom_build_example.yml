@@ -21,6 +21,7 @@ options:
   - ubitrack:with_python=True
   - ubitrack_lang_python:python=/usr/bin/python3
   - ubitrack:with_camera_realsense=True
+  - ubitrack:with_camera_kinect4azure=True
   - ubitrack_core:enable_tracing=False
   - opencv:with_gtk=True
   - opencv:with_cuda=False
