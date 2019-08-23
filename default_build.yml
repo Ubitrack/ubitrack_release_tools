@@ -18,5 +18,3 @@ profiles:
   - lang_python.yml
 options:
   - ubitrack:with_haptic_calibration=True
-  - ubitrack:with_python=True
-  - ubitrack_lang_python:python=/usr/bin/python3
