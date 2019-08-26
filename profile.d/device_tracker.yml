@@ -3,3 +3,7 @@ dependencies:
    gitrepo: https://github.com/Ubitrack/device_tracker_art
    gitbranch: v1.3.0
    conanuser: ubitrack
+ - name: ubitrack_device_tracker_vicon
+   gitrepo: https://github.com/Ubitrack/device_tracker_vicon
+   gitbranch: master
+   conanuser: ubitrack
