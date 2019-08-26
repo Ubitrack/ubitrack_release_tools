@@ -3,6 +3,10 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-librealsense
    gitbranch: stable/2.25.0
    conanuser: camposs
+ - name: kinect-azure-sensor-sdk
+   gitrepo: https://github.com/ulricheck/conan-azure-kinect-sensor-sdk
+   gitbranch: stable/1.2.0
+   conanuser: camposs
  - name: ubitrack_device_camera_avfoundation
    gitrepo: https://github.com/Ubitrack/device_camera_avfoundation
    gitbranch: v1.3.0
@@ -33,5 +37,9 @@ dependencies:
    conanuser: ubitrack
  - name: ubitrack_device_camera_realsense
    gitrepo: https://github.com/Ubitrack/device_camera_realsense
+   gitbranch: v1.3.0
+   conanuser: ubitrack
+ - name: ubitrack_device_camera_kinect4azure
+   gitrepo: https://github.com/Ubitrack/device_camera_kinect4azure
    gitbranch: v1.3.0
    conanuser: ubitrack
