@@ -29,7 +29,7 @@ dependencies:
    conanuser: camposs
  - name: msgpack
    gitrepo: https://github.com/ulricheck/conan-msgpack
-   gitbranch: stable/2.1.5
+   gitbranch: stable/3.2.0
    conanuser: camposs
  - name: opencv
    gitrepo: https://github.com/ulricheck/conan-opencv
