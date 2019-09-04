@@ -5,5 +5,5 @@ dependencies:
    conanuser: camposs
  - name: nvenc_rtsp
    gitrepo: https://github.com/TUM-CAMP-NARVIS/nvenc_rtsp.git
-   gitbranch: stable/0.1
+   gitbranch: master
    conanuser: artekmed
