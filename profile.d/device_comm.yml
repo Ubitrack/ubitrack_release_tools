@@ -3,7 +3,3 @@ dependencies:
    gitrepo: https://github.com/Ubitrack/device_comm_zmq
    gitbranch: v1.3.0
    conanuser: ubitrack
- - name: ubitrack_device_comm_videostream
-   gitrepo: https://github.com/Ubitrack/device_comm_videostream
-   gitbranch: v1.3.0
-   conanuser: ubitrack

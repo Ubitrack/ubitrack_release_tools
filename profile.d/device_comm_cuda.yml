@@ -7,3 +7,7 @@ dependencies:
    gitrepo: https://github.com/TUM-CAMP-NARVIS/nvenc_rtsp.git
    gitbranch: master
    conanuser: artekmed
+ - name: ubitrack_device_comm_videostream
+   gitrepo: https://github.com/Ubitrack/device_comm_videostream
+   gitbranch: v1.3.0
+   conanuser: ubitrack
