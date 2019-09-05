@@ -7,10 +7,6 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-zlib
    gitbranch: stable/1.2.11
    conanuser: camposs
- - name: libunistd
-   gitrepo: https://github.com/ulricheck/conan-libunistd
-   gitbranch: stable/1.2
-   conanuser: camposs
  - name: Boost
    gitrepo: https://github.com/ulricheck/conan-boost
    gitbranch: stable/1.70.0
