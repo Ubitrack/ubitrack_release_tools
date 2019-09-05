@@ -47,6 +47,42 @@ dependencies:
    gitrepo: https://github.com/ulricheck/conan-glad
    gitbranch: stable/0.1.27
    conanuser: camposs
+ - name: assimp
+   gitrepo: https://github.com/ulricheck/conan-assimp
+   gitbranch: stable/4.1.0
+   conanuser: camposs
+ - name: glfw
+   gitrepo: https://github.com/ulricheck/conan-glfw
+   gitbranch: stable/3.2.1
+   conanuser: camposs
+ - name: azmq
+   gitrepo: https://github.com/ulricheck/conan-azmq
+   gitbranch: stable/1.0.3
+   conanuser: camposs
+ - name: zmq
+   gitrepo: https://github.com/ulricheck/conan-zmq
+   gitbranch: stable/4.3.2
+   conanuser: camposs
+ - name: cppzmq
+   gitrepo: https://github.com/ulricheck/conan-cppzmq
+   gitbranch: stable/4.4.1
+   conanuser: camposs
+ - name: librealsense
+   gitrepo: https://github.com/ulricheck/conan-librealsense
+   gitbranch: stable/2.25.0
+   conanuser: camposs
+ - name: kinect-azure-sensor-sdk
+   gitrepo: https://github.com/ulricheck/conan-azure-kinect-sensor-sdk
+   gitbranch: stable/1.2.0
+   conanuser: camposs
+ - name: python_dev_config
+   gitrepo: https://github.com/ulricheck/conan-python_dev_config
+   gitbranch: master
+   conanuser: camposs
+ - name: pybind11
+   gitrepo: https://github.com/ulricheck/conan-pybind11
+   gitbranch: stable/2.3.0
+   conanuser: camposs
  - name: ubitrack_boost_bindings
    gitrepo: https://github.com/Ubitrack/3rd_boost_bindings
    gitbranch: v1.3.0

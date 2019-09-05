@@ -1,12 +1,4 @@
 dependencies:
- - name: python_dev_config
-   gitrepo: https://github.com/ulricheck/conan-python_dev_config
-   gitbranch: master
-   conanuser: camposs
- - name: pybind11
-   gitrepo: https://github.com/ulricheck/conan-pybind11
-   gitbranch: stable/2.3.0
-   conanuser: camposs
  - name: ubitrack_lang_python
    gitrepo: https://github.com/Ubitrack/lang_python
    gitbranch: v1.3.0

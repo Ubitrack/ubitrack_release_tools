@@ -1,12 +1,4 @@
 dependencies:
- - name: zmq
-   gitrepo: https://github.com/ulricheck/conan-zmq
-   gitbranch: stable/4.3.2
-   conanuser: camposs
- - name: cppzmq
-   gitrepo: https://github.com/ulricheck/conan-cppzmq
-   gitbranch: stable/4.4.1
-   conanuser: camposs
  - name: ubitrack_device_comm_zmq
    gitrepo: https://github.com/Ubitrack/device_comm_zmq
    gitbranch: v1.3.0
