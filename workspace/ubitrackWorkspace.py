@@ -108,17 +108,16 @@ def workspace_install(self, path, settings=None, options=None, env=None,
                     tmp.extend([g for g in generators if g not in tmp])
                     node.conanfile.generators = tmp
 
-        installer = BinaryInstaller(self.app.cache, self.app.out, self.app.remote_manager,
-                                    recorder=recorder, hook_manager=self.app.hook_manager)
+        installer = BinaryInstaller(self.app, recorder)
         installer.install(deps_graph, remotes, keep_build=False, graph_info=graph_info)
 
         install_folder = install_folder or cwd
         workspace.generate(install_folder, deps_graph, self.app.out)
 
-        workspace.build(install_folder, deps_graph, self.app.out,self.app.hook_manager, self.app.graph_manager)
+        workspace.build(install_folder, deps_graph, self.app.out,self.app)
 
 
-def build(self, install_folder, graph, output, hook_mangaer, graph_manager):        
+def build(self, install_folder, graph, output, app):        
         if self._ws_generator == "cmake":
             cmake = ""
             add_subdirs = ""
@@ -153,7 +152,9 @@ def build(self, install_folder, graph, output, hook_mangaer, graph_manager):
                     #print("build folder "+build)
                     #build(graph_manager, hook_manager, conanfile_path, source_folder, build_folder, package_folder, install_folder,
                     #test=False, should_configure=True, should_build=True, should_install=True, should_test=True)
-                    _build.build(graph_manager,hook_mangaer,conanFilePath,src,build, install_folder, build)
+                    #build(app, conanfile_path, source_folder, build_folder, package_folder, install_folder,
+                    #test=False, should_configure=True, should_build=True, should_install=True, should_test=True):
+                    _build.build(app,conanFilePath,src,build, install_folder, build)
 
 
 
