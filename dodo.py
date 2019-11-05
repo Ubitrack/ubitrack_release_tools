@@ -18,8 +18,10 @@ from conans.model.ref import ConanFileReference
 from conans.client.tools import Git as ConanGit
 from conans.client.runner import ConanRunner
 
-
-import workspace.ubitrackWorkspace
+try:
+  import workspace.ubitrackWorkspace
+except ImportError:
+  print('error importing workspace module - probably needs fix for latest conan version')
 
 
 CONAN_PROJECTREFERENCE_IS_OBJECT = semver.gte(client_version, '1.7.0', True)
