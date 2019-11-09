@@ -391,8 +391,9 @@ def build_workspace(deps, build_folder, config):
     conan_api.create_app()
 
     build_parameter = ["*:workspaceBuild=True"]
+    profile_name = global_config['profile_name'].split(",")
 
-    result = conan_api.workspace_install(build_folder, options=build_parameter, install_folder=installFolder)
+    result = conan_api.workspace_install(build_folder, options=build_parameter, install_folder=installFolder, profile_name=profile_name)
 
     return {}
 
