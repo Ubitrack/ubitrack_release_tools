@@ -18,14 +18,13 @@ from conans.model.ref import ConanFileReference
 from conans.client.tools import Git as ConanGit
 from conans.client.runner import ConanRunner
 
-try:
-  import workspace.ubitrackWorkspace
-except ImportError:
-  print('error importing workspace module - probably needs fix for latest conan version')
+import workspace.ubitrackWorkspace
 
 
-CONAN_PROJECTREFERENCE_IS_OBJECT = semver.gte(client_version, '1.7.0', True)
-CONAN_PROFILENAMES_IS_LIST = semver.gte(client_version, '1.12.0', True)
+if not semver.gte(client_version, '1.20.0', True):
+    raise RuntimeError("Please upgrade your conan to version >=1.20.0")
+
+
 BUILD_CONFIG_NAME = os.path.join(os.curdir, "build_config.yml")
 SKIP_PACKAGES = ["cmake_installer", ]
 
@@ -281,10 +280,7 @@ def build_release(deps, build_folder, config):
     "channel": channel,
     "build_modes": build_modes,
     "options": options}
-    if CONAN_PROFILENAMES_IS_LIST:  # since conan 1.12.0
-        kw["profile_names"] = [profile_name,] if profile_name is not None else []
-    else:
-        kw["profile_name"] = profile_name
+    kw["profile_names"] = [profile_name,] if profile_name is not None else []
 
     result = conan_api.create(package_repo_folder, **kw)
 

@@ -7,7 +7,7 @@ import conans
 from conans import __version__ as client_version
 from conans.client import packager, tools
 from conans.client.cache.cache import ClientCache
-from conans.client.cmd.build import build
+from conans.client.cmd.build import cmd_build
 from conans.client.cmd.create import create
 from conans.client.cmd.download import download
 from conans.client.cmd.export import cmd_export, export_alias
@@ -80,21 +80,22 @@ def workspace_install(self, path, settings=None, options=None, env=None,
         cwd = cwd or get_cwd()
         abs_path = os.path.normpath(os.path.join(cwd, path))
 
-        remotes = self.app.cache.registry.load_remotes()
-        remotes.select(remote_name)
-        self.app.python_requires.enable_remotes(update=update, remotes=remotes)
+        remotes = self.app.load_remotes(remote_name=remote_name, update=update)
+        # remotes = self.app.cache.registry.load_remotes()
+        # remotes.select(remote_name)
+        # self.app.python_requires.enable_remotes(update=update, remotes=remotes)
 
         workspace = Workspace(abs_path, self.app.cache)
         graph_info = get_graph_info(profile_name, settings, options, env, cwd, None,
                                     self.app.cache, self.app.out)
 
         self.app.out.info("Configuration:")
-        self.app.out.writeln(graph_info.profile.dumps())
+        self.app.out.writeln(graph_info.profile_host.dumps())
 
         self.app.cache.editable_packages.override(workspace.get_editable_dict())
 
         recorder = ActionRecorder()
-        deps_graph, _ = self.app.graph_manager.load_graph(workspace.root, None, graph_info, build,
+        deps_graph = self.app.graph_manager.load_graph(workspace.root, None, graph_info, build,
                                                        False, update, remotes, recorder)
 
         print_graph(deps_graph, self.app.out)
@@ -109,7 +110,7 @@ def workspace_install(self, path, settings=None, options=None, env=None,
                     node.conanfile.generators = tmp
 
         installer = BinaryInstaller(self.app, recorder)
-        installer.install(deps_graph, remotes, keep_build=False, graph_info=graph_info)
+        installer.install(deps_graph, remotes, build, update, keep_build=False, graph_info=graph_info)
 
         install_folder = install_folder or cwd
         workspace.generate(install_folder, deps_graph, self.app.out)
@@ -154,7 +155,7 @@ def build(self, install_folder, graph, output, app):
                     #test=False, should_configure=True, should_build=True, should_install=True, should_test=True)
                     #build(app, conanfile_path, source_folder, build_folder, package_folder, install_folder,
                     #test=False, should_configure=True, should_build=True, should_install=True, should_test=True):
-                    _build.build(app,conanFilePath,src,build, install_folder, build)
+                    _build.cmd_build(app,conanFilePath,src,build, install_folder, build)
 
 
 
