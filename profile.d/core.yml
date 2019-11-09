@@ -29,7 +29,7 @@ dependencies:
    conanuser: camposs
  - name: opencv
    gitrepo: https://github.com/ulricheck/conan-opencv
-   gitbranch: stable/3.4.3
+   gitbranch: stable/3.4.8
    conanuser: camposs
  - name: glew
    gitrepo: https://github.com/ulricheck/conan-glew
@@ -69,7 +69,7 @@ dependencies:
    conanuser: camposs
  - name: kinect-azure-sensor-sdk
    gitrepo: https://github.com/ulricheck/conan-azure-kinect-sensor-sdk
-   gitbranch: stable/1.2.0
+   gitbranch: stable/1.3.0
    conanuser: camposs
  - name: python_dev_config
    gitrepo: https://github.com/ulricheck/conan-python_dev_config
