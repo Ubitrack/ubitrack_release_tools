@@ -1,6 +1,6 @@
 dependencies:
  - name: nvpipe
-   gitrepo: https://github.com/ulricheck/conan-nvpipe
+   gitrepo: https://github.com/TUM-CONAN/conan-nvpipe
    gitbranch: stable/0.1
    conanuser: camposs
  - name: nvenc_rtsp

@@ -1,82 +1,82 @@
 dependencies:
  - name: bzip2
-   gitrepo: https://github.com/ulricheck/conan-bzip2
+   gitrepo: https://github.com/TUM-CONAN/conan-bzip2
    gitbranch: stable/1.0.6
    conanuser: camposs
  - name: zlib
-   gitrepo: https://github.com/ulricheck/conan-zlib
+   gitrepo: https://github.com/TUM-CONAN/conan-zlib
    gitbranch: stable/1.2.11
    conanuser: camposs
  - name: Boost
-   gitrepo: https://github.com/ulricheck/conan-boost
+   gitrepo: https://github.com/TUM-CONAN/conan-boost
    gitbranch: stable/1.70.0
    conanuser: camposs
  - name: clapack
-   gitrepo: https://github.com/ulricheck/conan-clapack
+   gitrepo: https://github.com/TUM-CONAN/conan-clapack
    gitbranch: stable/3.2.1
    conanuser: camposs
  - name: swig
-   gitrepo: https://github.com/ulricheck/conan-swig
+   gitrepo: https://github.com/TUM-CONAN/conan-swig
    gitbranch: stable/3.0.12
    conanuser: camposs
  - name: cuda_dev_config
-   gitrepo: https://github.com/ulricheck/conan-cuda_dev_config
+   gitrepo: https://github.com/TUM-CONAN/conan-cuda_dev_config
    gitbranch: stable/0.1
    conanuser: camposs
  - name: msgpack
-   gitrepo: https://github.com/ulricheck/conan-msgpack
+   gitrepo: https://github.com/TUM-CONAN/conan-msgpack
    gitbranch: stable/3.2.0
    conanuser: camposs
  - name: opencv
-   gitrepo: https://github.com/ulricheck/conan-opencv
+   gitrepo: https://github.com/TUM-CONAN/conan-opencv
    gitbranch: stable/3.4.8
    conanuser: camposs
  - name: glew
-   gitrepo: https://github.com/ulricheck/conan-glew
+   gitrepo: https://github.com/TUM-CONAN/conan-glew
    gitbranch: stable/2.1.0
    conanuser: camposs
  - name: glext
-   gitrepo: https://github.com/ulricheck/conan-glext
+   gitrepo: https://github.com/TUM-CONAN/conan-glext
    gitbranch: stable/1.3
    conanuser: camposs
  - name: glad
-   gitrepo: https://github.com/ulricheck/conan-glad
+   gitrepo: https://github.com/TUM-CONAN/conan-glad
    gitbranch: stable/0.1.27
    conanuser: camposs
  - name: assimp
-   gitrepo: https://github.com/ulricheck/conan-assimp
+   gitrepo: https://github.com/TUM-CONAN/conan-assimp
    gitbranch: stable/4.1.0
    conanuser: camposs
  - name: glfw
-   gitrepo: https://github.com/ulricheck/conan-glfw
+   gitrepo: https://github.com/TUM-CONAN/conan-glfw
    gitbranch: stable/3.2.1
    conanuser: camposs
  - name: azmq
-   gitrepo: https://github.com/ulricheck/conan-azmq
+   gitrepo: https://github.com/TUM-CONAN/conan-azmq
    gitbranch: stable/1.0.3
    conanuser: camposs
  - name: zmq
-   gitrepo: https://github.com/ulricheck/conan-zmq
+   gitrepo: https://github.com/TUM-CONAN/conan-zmq
    gitbranch: stable/4.3.2
    conanuser: camposs
  - name: cppzmq
-   gitrepo: https://github.com/ulricheck/conan-cppzmq
+   gitrepo: https://github.com/TUM-CONAN/conan-cppzmq
    gitbranch: stable/4.4.1
    conanuser: camposs
  - name: librealsense
-   gitrepo: https://github.com/ulricheck/conan-librealsense
+   gitrepo: https://github.com/TUM-CONAN/conan-librealsense
    gitbranch: stable/2.25.0
    conanuser: camposs
  - name: kinect-azure-sensor-sdk
-   gitrepo: https://github.com/ulricheck/conan-azure-kinect-sensor-sdk
+   gitrepo: https://github.com/TUM-CONAN/conan-azure-kinect-sensor-sdk
    gitbranch: stable/1.3.0
    conanuser: camposs
  - name: python_dev_config
-   gitrepo: https://github.com/ulricheck/conan-python_dev_config
+   gitrepo: https://github.com/TUM-CONAN/conan-python_dev_config
    gitbranch: master
    conanuser: camposs
  - name: pybind11
-   gitrepo: https://github.com/ulricheck/conan-pybind11
+   gitrepo: https://github.com/TUM-CONAN/conan-pybind11
    gitbranch: stable/2.3.0
    conanuser: camposs
  - name: ubitrack_boost_bindings
