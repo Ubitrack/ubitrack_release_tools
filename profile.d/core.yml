@@ -29,7 +29,7 @@ dependencies:
    conanuser: camposs
  - name: opencv
    gitrepo: https://github.com/TUM-CONAN/conan-opencv
-   gitbranch: stable/3.4.13
+   gitbranch: stable/3.4.8
    conanuser: camposs
  - name: glew
    gitrepo: https://github.com/TUM-CONAN/conan-glew
